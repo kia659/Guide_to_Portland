@@ -25,8 +25,8 @@ class SeedDatabase:
             for row in reader:
                 # Assuming the CSV has columns corresponding to the tables
                 cursor.execute(
-                    "INSERT INTO Activities (activity_name, activity_description, activity_address, activity_neighborhood, activity_type, activity_website) VALUES (?, ?, ?, ?, ?, ?)",
-                    (row['activity_name'], row['activity_description'], row['activity_address'], row['activity_neighborhood'], row['activity_type'], row['activity_website'])
+                    "INSERT INTO Activities (activity_name, activity_description, activity_type, activity_website, activity_address, activity_neighborhood) VALUES (?, ?, ?, ?, ?, ?)",
+                    (row['activity_name'], row['activity_description'], row['activity_type'], row['activity_website'], row['activity_address'], row['activity_neighborhood'])
                 )
                 self.connection.commit()
 

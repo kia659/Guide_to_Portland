@@ -1,9 +1,11 @@
 # importing regex for our  address validation
 import re
-from __init__ import CONN, CURSOR
+from models.__init__ import CONN, CURSOR
 
 
 class Activity:
+
+    all={}
 
     def __init__(
         self,
@@ -24,7 +26,7 @@ class Activity:
 
     @property
     def name(self):
-        self._name
+        return self._name
 
     @name.setter
     def name(self, value):
@@ -50,65 +52,85 @@ class Activity:
 
     @property
     def activity_type(self):
-        self._activity_type
+        return self._activity_type
 
     @activity_type.setter
-    def activity_type(self):
-        pass
+    def activity_type(self, activity_type):
+        self._activity_type = activity_type
 
     @property
     def website(self):
-        self._activity_type
+        return self._website
 
     @website.setter
-    def website(self):
-        pass
+    def website(self, website):
+        self._website = website
 
     @property
     def address(self):
         return self._address
+    
+    
 
-    @address.setter
-    def address(self, value):
-        pattern = (
-            r"(\d+)\s([NESWnesw]{,2})?\s?([\w\s]+),\s([\w\s]+),\s([A-Za-z]{2})\s(\d{5})"
-        )
-        if not re.match(pattern, value):
-            raise ValueError("Address format must be: 123 S main street , city, stat")
-        self._address = value
+    # @address.setter
+    # def address(self, value):
+    #     pattern = (
+    #         r"(\d+)\s([NESWnesw]{,2})?\s?([\w\s]+),\s([\w\s]+),\s([A-Za-z]{2})\s(\d{5})"
+    #     )
+    #     if not re.match(pattern, value):
+    #         raise ValueError("Address format must be: 123 S main street , city, stat")
+    #     self._address = value
 
     # method 1
+    @address.setter
+    def address(self, value):
+        # checks for address components
+        # components = value.split(' ')
+        # if len(components) < 5:
+        #     raise ValueError("Address is too short, seems to be missing components.")
+        # # is a street number
+        # if not components[0].isdigit():
+        #     raise ValueError("Address must start with a street number.")
 
-    # def address(self, value):
-    #     # checks for address components
-    #     components = value.split(' ')
-    #     if len(components) < 5:
-    #         raise ValueError("Address is too short, seems to be missing components.")
-    #     # is a street number
-    #     if not components[0].isdigit():
-    #         raise ValueError("Address must start with a street number.")
+        # # looks like a ZIP code (5 digits)
+        # if not (components[-1].isdigit() and len(components[-1]) == 5):
+        #     raise ValueError("Address must end with a 5-digit ZIP code.")
 
-    #     # looks like a ZIP code (5 digits)
-    #     if not (components[-1].isdigit() and len(components[-1]) == 5):
-    #         raise ValueError("Address must end with a 5-digit ZIP code.")
-
-    #     self._address = value
+        self._address = value
 
     @classmethod
     def create_table(cls):
         """Create a new table to persist the attributes of Review instances"""
-        sql = """
-            CREATE TABLE IF NOT EXISTS reviews (
-            id INTEGER PRIMARY KEY UNIQUE,
-            name TEXT, 
-            description TEXT, 
-            activity_type TEXT,
-            website TEXT,
-            address TEXT, 
-            neighborhood TEXT
-        """
-        CURSOR.execute(sql)
-        CONN.commit()
+        try:
+            sql = """
+                CREATE TABLE IF NOT EXISTS activities (
+                id INTEGER PRIMARY KEY,
+                name TEXT, 
+                description TEXT, 
+                activity_type TEXT,
+                website TEXT,
+                address TEXT, 
+                neighborhood TEXT
+                )
+            """
+            CURSOR.execute(sql)
+            CONN.commit()
+        except Exception as e:
+            CONN.rollback()
+            return e
+        
+    @classmethod
+    def drop_table(cls):
+        """Create a new table to persist the attributes of Review instances"""
+        try:
+            sql = """
+                DROP TABLE IF EXISTS activities
+            """
+            CURSOR.execute(sql)
+            CONN.commit()
+        except Exception as e:
+            CONN.rollback()
+            return e
 
     def save(self):
         sql = """

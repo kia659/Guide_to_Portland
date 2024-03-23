@@ -1,6 +1,8 @@
-from __init__ import CURSOR, CONN
+from models.__init__ import CURSOR, CONN
 
-class User_Activity:
+class UserActivity:
+
+    all={}
     
     def __init__(self, user_id, activity_id, saved_at, review, rating): # Figure out how the review/ratings will work. Should sit on Activity as well?
         self.user_id = user_id
@@ -43,13 +45,15 @@ class User_Activity:
         """ Create a new table to persist the attributes of User_Activity instances """
         sql = """
             CREATE TABLE IF NOT EXISTS user_activities (
+            id INTEGER PRIMARY KEY,
             user_id INTEGER,
             activity_id INTEGER,
             saved_at DATETIME,
             review TEXT,
             rating INTEGER,
-            FOREIGN KEY (user_id) REFERENCES users(user_id),
-            FOREIGN KEY (activity_id) REFERENCES activities(activity_id)
+            FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE Cascade,
+            FOREIGN KEY (activity_id) REFERENCES activities(activity_id) ON DELETE Cascade,
+            CONSTRAINT unique_activity_per_user UNIQUE(user_id, activity_id)
             )
         """
         CURSOR.execute(sql)
@@ -60,7 +64,7 @@ class User_Activity:
         Update object id attribute using the primary key value of new row.
         Save the object in local dictionary using table row's PK as dictionary key"""
         sql = """
-                INSERT INTO employees (user_id, activity_id, saved_at, review, rating)
+                INSERT INTO user_activities (user_id, activity_id, saved_at, review, rating)
                 VALUES (?, ?, ?, ?, ?)
         """
 
@@ -69,3 +73,16 @@ class User_Activity:
 
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
+
+    @classmethod
+    def drop_table(cls):
+        """Create a new table to persist the attributes of Review instances"""
+        try:
+            sql = """
+                DROP TABLE IF EXISTS user_activities
+            """
+            CURSOR.execute(sql)
+            CONN.commit()
+        except Exception as e:
+            CONN.rollback()
+            return e

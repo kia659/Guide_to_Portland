@@ -2,10 +2,11 @@ from models.__init__ import CURSOR, CONN
 
 class User:
     
+    # Dictionary of objects saved to the database.
     all = {}
 
-    def __init__(self, user_name, user_id=None): 
-        self.user_id = user_id
+    def __init__(self, user_name, id=None): 
+        self.id = id
         self.user_name = user_name
         
     @property
@@ -40,9 +41,7 @@ class User:
             return e
 
     def save(self):
-        """ Insert a new row with the name, job title, and department id values of the current Employee object.
-        Update object id attribute using the primary key value of new row.
-        Save the object in local dictionary using table row's PK as dictionary key"""
+        """ Insert a new row with user_name of the current User object."""
         sql = """
                 INSERT INTO users (user_name)
                 VALUES (?)
@@ -56,7 +55,7 @@ class User:
     
     @classmethod
     def drop_table(cls):
-        """Create a new table to persist the attributes of Review instances"""
+        """ Drop the table that persists User instances """
         try:
             sql = """
                 DROP TABLE IF EXISTS users

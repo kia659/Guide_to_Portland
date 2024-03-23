@@ -18,24 +18,23 @@ class SeedDatabase:
         if not self.connection:
             raise RuntimeError("Database connection not established.")
 
+        # Opens the CSV file for reading as a text file, ensuring it is UTF-8 encoded, and handling newline characters appropriately
         with open(csv_file, 'r', newline='', encoding='utf-8') as file:
+            # Creates a CSV reader object (reader) using DictReader, which interprets each row of the CSV file as a dictionary where keys are column headers and values are cell values
             reader = csv.DictReader(file)
             cursor = self.connection.cursor()
 
             for row in reader:
-                # Assuming the CSV has columns corresponding to the tables
                 cursor.execute(
-                    "INSERT INTO Activities (activity_name, activity_description, activity_type, activity_website, activity_address, activity_neighborhood) VALUES (?, ?, ?, ?, ?, ?)",
-                    (row['activity_name'], row['activity_description'], row['activity_type'], row['activity_website'], row['activity_address'], row['activity_neighborhood'])
+                    "INSERT INTO activities (name, description, activity_type, website, address, neighborhood) VALUES (?, ?, ?, ?, ?, ?)",
+                    (row['name'], row['description'], row['activity_type'], row['website'], row['address'], row['neighborhood'])
                 )
                 self.connection.commit()
 
-                # You can similarly insert data into other tables if needed
-
+# Checks if the script is being run directly as the main program
 if __name__ == "__main__":
-    # Example usage
     db_file = "database.db"
-    csv_file = "portland_guide_seed_data.csv"
+    csv_file = "lib/seed/portland_guide_seed_data.csv"
 
     with SeedDatabase(db_file) as seed_db:
         seed_db.seed_from_csv(csv_file)

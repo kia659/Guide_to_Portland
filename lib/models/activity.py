@@ -17,6 +17,7 @@ class Activity:
         activity_type=None,
         id=None,
     ):
+        self.id = id
         self.name = name
         self.description = description
         self.activity_type = activity_type

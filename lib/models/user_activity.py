@@ -2,6 +2,7 @@ from models.__init__ import CURSOR, CONN
 
 class UserActivity:
 
+    # Dictionary of objects saved to the database.
     all={}
     
     def __init__(self, user_id, activity_id, saved_at, review, rating): # Figure out how the review/ratings will work. Should sit on Activity as well?

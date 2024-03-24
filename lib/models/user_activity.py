@@ -43,7 +43,6 @@ class UserActivity:
 
     @classmethod
     def create_table(cls):
-        """ Create a new table to persist the attributes of User_Activity instances """
         sql = """
             CREATE TABLE IF NOT EXISTS user_activities (
             id INTEGER PRIMARY KEY,
@@ -61,9 +60,6 @@ class UserActivity:
         CONN.commit()
 
     def save(self):
-        """ Insert a new row with the name, job title, and department id values of the current Employee object.
-        Update object id attribute using the primary key value of new row.
-        Save the object in local dictionary using table row's PK as dictionary key"""
         sql = """
                 INSERT INTO user_activities (user_id, activity_id, saved_at, review, rating)
                 VALUES (?, ?, ?, ?, ?)
@@ -77,7 +73,6 @@ class UserActivity:
 
     @classmethod
     def drop_table(cls):
-        """Create a new table to persist the attributes of Review instances"""
         try:
             sql = """
                 DROP TABLE IF EXISTS user_activities

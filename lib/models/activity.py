@@ -1,11 +1,10 @@
-# importing regex for our  address validation
-import re
 from models.__init__ import CONN, CURSOR
+from user_activity import UserActivity
 
 
 class Activity:
 
-    all={}
+    all = {}
 
     def __init__(
         self,
@@ -55,6 +54,8 @@ class Activity:
     def activity_type(self):
         return self._activity_type
 
+    #  NEED TO ADD ACTIVITY TYPE WITH SET LIST
+
     @activity_type.setter
     def activity_type(self, activity_type):
         self._activity_type = activity_type
@@ -65,39 +66,48 @@ class Activity:
 
     @website.setter
     def website(self, website):
+        if website is not None and not (
+            website.startswith("http://") or website.startswith("https://")
+        ):
+            raise ValueError(
+                "Invalid URL. URL must start with 'http://' or 'https://'."
+            )
         self._website = website
 
     @property
     def address(self):
         return self._address
-    
-    
 
-    # @address.setter
-    # def address(self, value):
-    #     pattern = (
-    #         r"(\d+)\s([NESWnesw]{,2})?\s?([\w\s]+),\s([\w\s]+),\s([A-Za-z]{2})\s(\d{5})"
-    #     )
-    #     if not re.match(pattern, value):
-    #         raise ValueError("Address format must be: 123 S main street , city, stat")
-    #     self._address = value
-
-    # method 1
     @address.setter
     def address(self, value):
         # checks for address components
-        # components = value.split(' ')
-        # if len(components) < 5:
-        #     raise ValueError("Address is too short, seems to be missing components.")
-        # # is a street number
-        # if not components[0].isdigit():
-        #     raise ValueError("Address must start with a street number.")
-
-        # # looks like a ZIP code (5 digits)
-        # if not (components[-1].isdigit() and len(components[-1]) == 5):
-        #     raise ValueError("Address must end with a 5-digit ZIP code.")
-
+        components = value.split(" ")
+        if len(components) < 5:
+            raise ValueError("Address is too short, seems to be missing components.")
+        # is a street number
+        if not components[0].isdigit():
+            raise ValueError("Address must start with a street number.")
+        # is in portland
+        if not (
+            components[-3].lower() == "portland," and components[-2].lower() == "or"
+        ):
+            raise ValueError("Address must be in Portland, OR.")
+        # looks like a ZIP code (5 digits)
+        zip_code = components[-1]
+        if not zip_code.startswith("97"):
+            raise ValueError("ZIP code must start with '97'.")
         self._address = value
+
+    def user_ratings(self):
+        return [
+            user_activity.rating
+            for user_activity in UserActivity.all.values()
+            if user_activity.activity_id == self.id and user_activity.rating is not None
+        ]
+
+    def average_rating(self):
+        ratings = self.user_ratings()
+        return sum(ratings) / len(ratings) or None
 
     @classmethod
     def create_table(cls):
@@ -119,7 +129,7 @@ class Activity:
         except Exception as e:
             CONN.rollback()
             return e
-        
+
     @classmethod
     def drop_table(cls):
         """Create a new table to persist the attributes of Review instances"""

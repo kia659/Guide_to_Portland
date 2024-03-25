@@ -1,8 +1,9 @@
 from models.__init__ import CONN, CURSOR
 from user_activity import UserActivity
+from helper import Helper
 
 
-class Activity:
+class Activity(Helper):
 
     all = {}
 
@@ -98,23 +99,28 @@ class Activity:
             raise ValueError("ZIP code must start with '97'.")
         self._address = value
 
-    def user_ratings(self):
-        return [
-            user_activity.rating
-            for user_activity in UserActivity.all.values()
-            if user_activity.activity_id == self.id and user_activity.rating is not None
-        ]
+    # def user_ratings(self):
+    #     return [
+    #         user_activity.rating
+    #         for user_activity in UserActivity.all.values()
+    #         if user_activity.activity_id == self.id and user_activity.rating is not None
+    #     ]
 
-    def average_rating(self):
-        ratings = self.user_ratings()
-        return sum(ratings) / len(ratings) or None
+    # def average_rating(self):
+    #     ratings = self.user_ratings()
+    #     return sum(ratings) / len(ratings) or None
+
+    # def print_rating(self):
+    #     rate_level_emojis = "⭐️" * self.rating if self.rating else None
+    #     print(f"{self.name} (ID: {self.activity_id}) | Rating: {rate_level_emojis}")
 
     @classmethod
     def create_table(cls):
-        """Create a new table to persist the attributes of Review instances"""
         try:
-            sql = """
-                CREATE TABLE IF NOT EXISTS activities (
+            with CONN:
+                CURSOR.execute(
+                    f"""
+                CREATE TABLE IF NOT EXISTS {cls.pascal_to_camel_plural()} (
                 id INTEGER PRIMARY KEY,
                 name TEXT, 
                 description TEXT, 
@@ -122,45 +128,45 @@ class Activity:
                 website TEXT,
                 address TEXT, 
                 neighborhood TEXT
+                );
+            """
                 )
-            """
-            CURSOR.execute(sql)
-            CONN.commit()
         except Exception as e:
-            CONN.rollback()
-            return e
-
-    @classmethod
-    def drop_table(cls):
-        """Create a new table to persist the attributes of Review instances"""
-        try:
-            sql = """
-                DROP TABLE IF EXISTS activities
-            """
-            CURSOR.execute(sql)
-            CONN.commit()
-        except Exception as e:
-            CONN.rollback()
             return e
 
     def save(self):
-        sql = """
-                INSERT INTO activities (name, description, activity_type, website, address, neighborhood)
-                VALUES (?, ?, ?, ?, ?, ?)
-        """
+        try:
+            with CONN:
+                CURSOR.execute(
+                    f"""
+                        INSERT INTO {type(self).pascal_to_camel_plural()}
+                        (name, description, activity_type, website, address, neighborhood)
+                        VALUES
+                        (?, ?, ?, ?, ?, ?);
+                    """,
+                    (
+                        self.name,
+                        self.description,
+                        self.activity_type,
+                        self.website,
+                        self.address,
+                        self.neighborhood,
+                    ),
+                )
+            self.id = CURSOR.lastrowid
+        except Exception as e:
+            return e
 
-        CURSOR.execute(
-            sql,
-            (
-                self.name,
-                self.description,
-                self.activity_type,
-                self.website,
-                self.address,
-                self.neighborhood,
-            ),
-        )
-        CONN.commit()
-
-        self.id = CURSOR.lastrowid
-        type(self).all[self.id] = self
+    @classmethod
+    def instance_from_db(cls, row):
+        activity = cls.all.get(row[0])
+        if activity:
+            activity.name = row[1]
+            activity.description = row[2]
+            activity.neighborhood = row[3]
+            activity.website = row[4]
+            activity.activity_type = row[5]
+        else:
+            activity = cls(row[1], row[2], row[3], row[4], row[5], id=row[0])
+            cls.all[activity.id] = activity
+        return activity

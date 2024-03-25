@@ -18,7 +18,8 @@ class UserActivity(Helper):
         self.review = review
         self.rating = rating
 
-    # Double check that there should be no properties for: user_id, activity_id, saved_at
+# Double check that there should be no properties for: user_id, activity_id, saved_at
+
 
     @property
     def review(self):

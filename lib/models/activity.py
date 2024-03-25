@@ -1,6 +1,5 @@
 from models.__init__ import CONN, CURSOR
-from user_activity import UserActivity
-from helper import Helper
+from models.helper import Helper
 
 
 class Activity(Helper):
@@ -9,22 +8,22 @@ class Activity(Helper):
 
 
     acceptable_activity_types = {
-        "free experiences", 
-        "food carts", 
-        "breweries & bars", 
-        "shops", 
-        "paid experiences", 
-        "restaurants"
+        "Free Experiences", 
+        "Food Carts", 
+        "Breweries & Bars", 
+        "Shops", 
+        "Paid Experiences", 
+        "Restaurants"
     }
 
     def __init__(
         self,
         name,
         description,
+        activity_type,
+        website,
         address,
         neighborhood,
-        website,
-        activity_type=None,
         id=None,
     ):
         self.id = id
@@ -95,8 +94,8 @@ class Activity(Helper):
     def neighborhood(self, value):
         if not isinstance(value, str):
             raise TypeError("Neighborhood must be strings")
-        elif not 5 <= len(value) <= 15:
-            raise AttributeError("Neighborhood must be at least 5 character and no more than 15")
+        elif not 5 <= len(value) <= 30:
+            raise AttributeError("Neighborhood must be at least 5 character and no more than 30")
         else:
             self._neighborhood = value
 
@@ -106,12 +105,10 @@ class Activity(Helper):
 
     @website.setter
     def website(self, website):
-        if website is not None and not (
-            website.startswith("http://") or website.startswith("https://")
-        ):
-            raise ValueError(
-                "Invalid URL. URL must start with 'http://' or 'https://'."
-            )
+        # if not website.startswith("http://") or website.startswith("https://"):
+        #     raise ValueError(
+        #         "Invalid URL. URL must start with 'http://' or 'https://'."
+        #     )
         self._website = website
 
 # TEST ME
@@ -121,16 +118,16 @@ class Activity(Helper):
 
     @activity_type.setter
     def activity_type(self, activity_type):
-        if activity_type.lower() not in self.acceptable_activity_types:
+        if activity_type not in self.acceptable_activity_types:
             raise ValueError("Invalid activity type. Please choose from: {}".format(self.acceptable_activity_types))
         self._activity_type = activity_type
 
-    def user_ratings(self):
-        return [
-            user_activity.rating
-            for user_activity in UserActivity.all.values()
-            if user_activity.activity_id == self.id and user_activity.rating is not None
-        ]
+    # def user_ratings(self):
+    #     return [
+    #         user_activity.rating
+    #         for user_activity in UserActivity.all.values()
+    #         if user_activity.activity_id == self.id and user_activity.rating is not None
+    #     ]
 
     # def average_rating(self):
     #     ratings = self.user_ratings()
@@ -144,7 +141,7 @@ class Activity(Helper):
     def create_table(cls):
         try:
             with CONN:
-                CURSOR.execute(
+                (
                     f"""
                 CREATE TABLE IF NOT EXISTS {cls.pascal_to_camel_plural()} (
                 id INTEGER PRIMARY KEY,
@@ -162,6 +159,7 @@ class Activity(Helper):
 
     def save(self):
         try:
+
             with CONN:
                 CURSOR.execute(
                     f"""

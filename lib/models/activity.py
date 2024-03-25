@@ -6,6 +6,16 @@ class Activity:
 
     all = {}
 
+
+    acceptable_activity_types = {
+        "free experiences", 
+        "food carts", 
+        "breweries & bars", 
+        "shops", 
+        "paid experiences", 
+        "restaurants"
+    }
+
     def __init__(
         self,
         name,
@@ -49,30 +59,7 @@ class Activity:
                 "descriptions must be strings with at least one character"
             )
         self._description = value
-
-    @property
-    def activity_type(self):
-        return self._activity_type
-
-    #  NEED TO ADD ACTIVITY TYPE WITH SET LIST
-
-    @activity_type.setter
-    def activity_type(self, activity_type):
-        self._activity_type = activity_type
-
-    @property
-    def website(self):
-        return self._website
-
-    @website.setter
-    def website(self, website):
-        if website is not None and not (
-            website.startswith("http://") or website.startswith("https://")
-        ):
-            raise ValueError(
-                "Invalid URL. URL must start with 'http://' or 'https://'."
-            )
-        self._website = website
+        
 
     @property
     def address(self):
@@ -97,6 +84,45 @@ class Activity:
         if not zip_code.startswith("97"):
             raise ValueError("ZIP code must start with '97'.")
         self._address = value
+
+# ask steph should we restrict changing the neighborhood :)
+    @property
+    def neighborhood(self):
+        return self._neighborhood
+
+    @neighborhood.setter
+    def neighborhood(self, value):
+        if not isinstance(value, str):
+            raise TypeError("Neighborhood must be strings")
+        elif not 5 <= len(value) <= 15:
+            raise AttributeError("Neighborhood must be at least 5 character and no more than 15")
+        else:
+            self._neighborhood = value
+
+    @property
+    def website(self):
+        return self._website
+
+    @website.setter
+    def website(self, website):
+        if website is not None and not (
+            website.startswith("http://") or website.startswith("https://")
+        ):
+            raise ValueError(
+                "Invalid URL. URL must start with 'http://' or 'https://'."
+            )
+        self._website = website
+
+# TEST ME
+    @property
+    def activity_type(self):
+        return self._activity_type
+
+    @activity_type.setter
+    def activity_type(self, activity_type):
+        if activity_type.lower() not in self.acceptable_activity_types:
+            raise ValueError("Invalid activity type. Please choose from: {}".format(self.acceptable_activity_types))
+        self._activity_type = activity_type
 
     def user_ratings(self):
         return [
@@ -164,3 +190,4 @@ class Activity:
 
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
+

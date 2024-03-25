@@ -1,7 +1,8 @@
 from models.__init__ import CURSOR, CONN
+from helper import Helper
 
 
-class User:
+class User(Helper):
 
     # Dictionary of objects saved to the database.
     all = {}
@@ -30,38 +31,73 @@ class User:
     @classmethod
     def create_table(cls):
         try:
-            sql = """
-                CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY,
-                user_name TEXT UNIQUE
-                )
+            with CONN:
+                (
+                    f"""
+                    CREATE TABLE IF NOT EXISTS {cls.pascal_to_camel_plural()} (
+                    id INTEGER PRIMARY KEY,
+                    user_name TEXT UNIQUE
+                    );
             """
-            CURSOR.execute(sql)
-            CONN.commit()
+                )
         except Exception as e:
-            CONN.rollback()
             return e
 
     def save(self):
-        sql = """
-                INSERT INTO users (user_name)
-                VALUES (?)
-        """
-
-        CURSOR.execute(sql, (self.user_name,))
-        CONN.commit()
-
-        self.id = CURSOR.lastrowid
-        type(self).all[self.id] = self
+        try:
+            with CONN:
+                CURSOR.execute(
+                    f"""
+                        INSERT INTO {type(self).pascal_to_camel_plural()}  (user_name)
+                        VALUES (?);
+                    """,
+                    (self.user_name,),
+                )
+            self.id = CURSOR.lastrowid
+        except Exception as e:
+            return e
 
     @classmethod
-    def drop_table(cls):
+    def find_by_id(cls, id):
         try:
-            sql = """
-                DROP TABLE IF EXISTS users
-            """
-            CURSOR.execute(sql)
-            CONN.commit()
+            CURSOR.execute(
+                """
+                SELECT * FROM {cls.pascal_to_camel_plural()}
+                WHERE id = ?;
+                """,
+                (id,),
+            )
+            result = CURSOR.fetchone()
+            if result:
+                return cls(
+                    id=result["id"],
+                )
         except Exception as e:
-            CONN.rollback()
+            print(f"Error finding record by id: {e}")
+        return None
+
+    @classmethod
+    def create(cls, user_name):
+        new_user = cls(user_name)
+        new_user.save()
+        return new_user
+
+    def delete(self):
+        try:
+            with CONN:
+                CURSOR.execute(
+                    f"""
+                        DELETE FROM {type(self).pascal_to_camel_plural()}
+                        WHERE id = ?;
+                    """,
+                    (self.id,),
+                )
+                self.id = None
+        except Exception as e:
+            print(f"Failed to delete due to error: {e}")
             return e
+
+        # instance to view user name in CLI
+
+    def display(self):
+        print(f"Username: {self.user_name}")

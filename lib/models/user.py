@@ -1,5 +1,5 @@
 from models.__init__ import CURSOR, CONN
-from helper import Helper
+from models.helper import Helper
 
 
 class User(Helper):

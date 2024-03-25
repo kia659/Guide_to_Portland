@@ -1,7 +1,7 @@
 from models.__init__ import CONN, CURSOR
-from user import User
-from activity import Activity
-from helper import Helper
+from models.user import User
+from models.activity import Activity
+from models.helper import Helper
 
 
 class UserActivity(Helper):

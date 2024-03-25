@@ -1,5 +1,6 @@
 import re
 from abc import ABC
+from models.__init__ import CONN, CURSOR
 
 
 class Helper(ABC):
@@ -23,7 +24,7 @@ class Helper(ABC):
         return camel_case_plural
 
     @classmethod
-    def drop_table(cls, CONN, CURSOR):
+    def drop_table(cls):
         try:
             with CONN:
                 CURSOR.execute(
@@ -36,7 +37,7 @@ class Helper(ABC):
             return e
 
     @classmethod
-    def get_all(cls, CONN, CURSOR):
+    def get_all(cls):
         try:
             with CONN:
                 result = CURSOR.execute(f"SELECT * FROM {cls.pascal_to_camel_plural()}")

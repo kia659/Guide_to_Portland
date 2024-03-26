@@ -43,6 +43,9 @@ class SeedDatabase:
             xen = User.create("xen")
             xen_activity = UserActivity(xen.id, sample(activities, 1)[0].id, datetime.now(), "we had a great time!", 4)
             xen_activity.save()
+            matteo = User.create("matteo")
+            matteo_activity = UserActivity(matteo.id, sample(activities, 1)[0].id, datetime.now(), "awesome!", 5)
+            matteo_activity.save()
                 # cursor.execute(
                 #     "INSERT INTO activities (name, description, activity_type, website, address, neighborhood) VALUES (?, ?, ?, ?, ?, ?)",
                 #     (row['name'], row['description'], row['activity_type'], row['website'], row['address'], row['neighborhood'])

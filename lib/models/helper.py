@@ -1,6 +1,6 @@
+from models.__init__ import CONN, CURSOR
 import re
 from abc import ABC
-from models.__init__ import CONN, CURSOR
 
 
 class Helper(ABC):
@@ -47,19 +47,6 @@ class Helper(ABC):
                 return [cls.instance_from_db(row) for row in rows]
         except Exception as e:
             return e
-    
-    # @classmethod
-    # def find_by_id(cls, id):
-    #     """Return an object corresponding to the table row matching the specified primary key"""
-    #     sql = f"""
-    #         SELECT *
-    #         FROM {cls.pascal_to_camel_plural()}
-    #         WHERE id = ?
-    #     """
-
-    #     row = CURSOR.execute(sql, (id,)).fetchone()
-    #     return cls.instance_from_db(row) if row else None
-    
 
     @classmethod
     def find_by_id(cls, id):
@@ -79,3 +66,37 @@ class Helper(ABC):
         except Exception as e:
             print(f"Error finding record by id: {e}")
         return None
+        
+    @classmethod
+    def find_by_name(cls, name):
+        try:
+            with CONN:
+                query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE name = ?"
+                result = CURSOR.execute(query, (name,))
+                rows = result.fetchall()
+                return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            return e
+        
+    @classmethod
+    def find_by_rating(cls, rating):
+        try:
+            with CONN:
+                query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE rating = ?"
+                result = CURSOR.execute(query, (rating,))
+                rows = result.fetchall()
+                return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            return e
+        
+    @classmethod
+    def find_by_neighborhood(cls, neighborhood):
+        try:
+            with CONN:
+                query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE neighborhood = ?"
+                result = CURSOR.execute(query, (neighborhood,))
+                rows = result.fetchall()
+                return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            return e
+        

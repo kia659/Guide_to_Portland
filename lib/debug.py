@@ -7,7 +7,7 @@ from models.user_activity import UserActivity
 from models.user import User
 from models.activity import Activity
 from datetime import datetime
-# from models.helper import Helper
+from models.helper import Helper
 
 # Helper.drop_table()
 # UserActivity.drop_table()

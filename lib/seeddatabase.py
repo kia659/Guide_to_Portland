@@ -35,10 +35,14 @@ class SeedDatabase:
 
 
             kia = User.create("kia")
-            kia_activity = UserActivity(kia.id, sample(activities, 1)[0].id, datetime.now(), "test review", 2)
+            kia_activity = UserActivity(kia.id, sample(activities, 1)[0].id, datetime.now(), "ehh, it was ok.", 2)
             kia_activity.save()
-            ipdb.set_trace()
-
+            steph = User.create("steph")
+            steph_activity = UserActivity(steph.id, sample(activities, 1)[0].id, datetime.now(), "So fun!", 5)
+            steph_activity.save()
+            xen = User.create("xen")
+            xen_activity = UserActivity(xen.id, sample(activities, 1)[0].id, datetime.now(), "we had a great time!", 4)
+            xen_activity.save()
                 # cursor.execute(
                 #     "INSERT INTO activities (name, description, activity_type, website, address, neighborhood) VALUES (?, ?, ?, ?, ?, ?)",
                 #     (row['name'], row['description'], row['activity_type'], row['website'], row['address'], row['neighborhood'])

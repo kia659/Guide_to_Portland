@@ -1,6 +1,6 @@
+from models.__init__ import CONN, CURSOR
 import re
 from abc import ABC
-from models.__init__ import CONN, CURSOR
 
 
 class Helper(ABC):
@@ -47,3 +47,37 @@ class Helper(ABC):
                 return [cls.instance_from_db(row) for row in rows]
         except Exception as e:
             return e
+        
+    @classmethod
+    def find_by_name(cls, name):
+        try:
+            with CONN:
+                query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE name = ?"
+                result = CURSOR.execute(query, (name,))
+                rows = result.fetchall()
+                return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            return e
+        
+    @classmethod
+    def find_by_rating(cls, rating):
+        try:
+            with CONN:
+                query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE rating = ?"
+                result = CURSOR.execute(query, (rating,))
+                rows = result.fetchall()
+                return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            return e
+        
+    @classmethod
+    def find_by_neighborhood(cls, neighborhood):
+        try:
+            with CONN:
+                query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE neighborhood = ?"
+                result = CURSOR.execute(query, (neighborhood,))
+                rows = result.fetchall()
+                return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            return e
+        

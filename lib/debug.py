@@ -7,16 +7,16 @@ from models.user_activity import UserActivity
 from models.user import User
 from models.activity import Activity
 from datetime import datetime
-# from models.helper import Helper
+from models.helper import Helper
 
 # Helper.drop_table()
-UserActivity.drop_table()
-User.drop_table()
-Activity.drop_table()
+# UserActivity.drop_table()
+# User.drop_table()
+# Activity.drop_table()
 
-User.create_table()
-Activity.create_table()
-UserActivity.create_table()
+# User.create_table()
+# Activity.create_table()
+# UserActivity.create_table()
 # user1 = User("steph")
 # user1.save()
 # activity1 = Activity("Test Debug Experience", "Description for experience.","Free Experiences","123 S main street, Portland, OR 97205","Arlington Heights", "https://www.test.com")

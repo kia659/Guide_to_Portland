@@ -1,5 +1,12 @@
 import csv
 import sqlite3
+from models.activity import Activity
+import ipdb
+from random import sample
+from datetime import datetime
+from models.user import User
+from models.user_activity import UserActivity
+
 
 class SeedDatabase:
     def __init__(self, db_file):
@@ -24,17 +31,31 @@ class SeedDatabase:
             reader = csv.DictReader(file)
             cursor = self.connection.cursor()
 
-            for row in reader:
-                cursor.execute(
-                    "INSERT INTO activities (name, description, activity_type, website, address, neighborhood) VALUES (?, ?, ?, ?, ?, ?)",
-                    (row['name'], row['description'], row['activity_type'], row['website'], row['address'], row['neighborhood'])
-                )
-                self.connection.commit()
+            activities = [Activity.create(*row) for row in reader]
+
+
+            kia = User.create("kia")
+            kia_activity = UserActivity(kia.id, sample(activities, 1)[0].id, datetime.now(), "test review", 2)
+            kia_activity.save()
+            ipdb.set_trace()
+
+                # cursor.execute(
+                #     "INSERT INTO activities (name, description, activity_type, website, address, neighborhood) VALUES (?, ?, ?, ?, ?, ?)",
+                #     (row['name'], row['description'], row['activity_type'], row['website'], row['address'], row['neighborhood'])
+                # )
+                # self.connection.commit()
 
 # Checks if the script is being run directly as the main program
 if __name__ == "__main__":
+    UserActivity.drop_table()
+    User.drop_table()
+    Activity.drop_table()
+
+    User.create_table()
+    Activity.create_table()
+    UserActivity.create_table()
     db_file = "database.db"
-    csv_file = "lib/seed/portland_guide_seed_data.csv"
+    csv_file = "lib/portland_guide_seed_data.csv"
 
     with SeedDatabase(db_file) as seed_db:
         seed_db.seed_from_csv(csv_file)

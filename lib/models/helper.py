@@ -18,6 +18,8 @@ class Helper(ABC):
             last_word = words[-1]
             if last_word.endswith("s") or last_word.endswith("x"):
                 camel_case_plural += "es"
+            elif last_word.endswith("y"):
+                camel_case_plural = camel_case_plural[:-1] + "ies"
             else:
                 camel_case_plural += "s"
 

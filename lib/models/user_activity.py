@@ -98,7 +98,7 @@ class UserActivity(Helper):
                 CURSOR.execute(
                     f"""
                         UPDATE {type(self).pascal_to_camel_plural()} 
-                        SET rating = ?, review = ?
+                        SET review = ?, rating = ? 
                         WHERE user_id = ? AND activity_id = ?;
                     """,
                     (self.rating, self.review, self.user_id, self.activity_id),

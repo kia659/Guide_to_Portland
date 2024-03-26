@@ -1,5 +1,6 @@
 from models.__init__ import CURSOR, CONN
 from models.helper import Helper
+import ipdb
 
 
 class User(Helper):
@@ -32,13 +33,13 @@ class User(Helper):
     def create_table(cls):
         try:
             with CONN:
-                (
+                CURSOR.execute(
                     f"""
                     CREATE TABLE IF NOT EXISTS {cls.pascal_to_camel_plural()} (
-                    id INTEGER PRIMARY KEY,
-                    user_name TEXT UNIQUE
-                    );
-            """
+                        id INTEGER PRIMARY KEY,
+                        user_name TEXT UNIQUE
+                        );
+                    """
                 )
         except Exception as e:
             return e
@@ -51,9 +52,9 @@ class User(Helper):
                         INSERT INTO {type(self).pascal_to_camel_plural()}  (user_name)
                         VALUES (?);
                     """,
-                    (self.user_name,),
+                    (self.user_name,)
                 )
-            self.id = CURSOR.lastrowid
+                self.id = CURSOR.lastrowid
         except Exception as e:
             return e
 

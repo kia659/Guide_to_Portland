@@ -1,5 +1,6 @@
 from models.__init__ import CONN, CURSOR
 from models.helper import Helper
+import ipdb
 
 
 class Activity(Helper):
@@ -21,18 +22,18 @@ class Activity(Helper):
         name,
         description,
         activity_type,
-        website,
         address,
         neighborhood,
+        website=None,
         id=None,
     ):
         self.id = id
         self.name = name
         self.description = description
         self.activity_type = activity_type
-        self.website = website
         self.address = address
         self.neighborhood = neighborhood
+        self.website = website
 
     @property
     def name(self):
@@ -141,18 +142,18 @@ class Activity(Helper):
     def create_table(cls):
         try:
             with CONN:
-                (
+                CURSOR.execute(
                     f"""
-                CREATE TABLE IF NOT EXISTS {cls.pascal_to_camel_plural()} (
-                id INTEGER PRIMARY KEY,
-                name TEXT, 
-                description TEXT, 
-                activity_type TEXT,
-                website TEXT,
-                address TEXT, 
-                neighborhood TEXT
-                );
-            """
+                    CREATE TABLE IF NOT EXISTS {cls.pascal_to_camel_plural()} (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT, 
+                        description TEXT, 
+                        activity_type TEXT,
+                        address TEXT, 
+                        neighborhood TEXT,
+                        website TEXT
+                        );
+                    """
                 )
         except Exception as e:
             return e
@@ -164,7 +165,7 @@ class Activity(Helper):
                 CURSOR.execute(
                     f"""
                         INSERT INTO {type(self).pascal_to_camel_plural()}
-                        (name, description, activity_type, website, address, neighborhood)
+                        (name, description, activity_type, address, neighborhood, website)
                         VALUES
                         (?, ?, ?, ?, ?, ?);
                     """,
@@ -172,9 +173,9 @@ class Activity(Helper):
                         self.name,
                         self.description,
                         self.activity_type,
-                        self.website,
                         self.address,
                         self.neighborhood,
+                        self.website,
                     ),
                 )
             self.id = CURSOR.lastrowid
@@ -194,5 +195,10 @@ class Activity(Helper):
             activity = cls(row[1], row[2], row[3], row[4], row[5], id=row[0])
             cls.all[activity.id] = activity
         return activity
-
-
+    
+    @classmethod
+    def create(cls, name, description, activity_type, address, neighborhood, website=None):
+        # ipdb.set_trace()
+        new_activity = cls(name, description, activity_type, address, neighborhood, website)
+        new_activity.save()
+        return new_activity

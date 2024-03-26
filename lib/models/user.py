@@ -1,7 +1,7 @@
 from models.__init__ import CURSOR, CONN
 from models.helper import Helper
-import ipdb
-
+# import ipdb
+# from models.user_activity import UserActivity
 
 class User(Helper):
 
@@ -59,25 +59,6 @@ class User(Helper):
             return e
 
     @classmethod
-    def find_by_id(cls, id):
-        try:
-            CURSOR.execute(
-                """
-                SELECT * FROM {cls.pascal_to_camel_plural()}
-                WHERE id = ?;
-                """,
-                (id,),
-            )
-            result = CURSOR.fetchone()
-            if result:
-                return cls(
-                    id=result["id"],
-                )
-        except Exception as e:
-            print(f"Error finding record by id: {e}")
-        return None
-
-    @classmethod
     def create(cls, user_name):
         new_user = cls(user_name)
         new_user.save()
@@ -98,7 +79,56 @@ class User(Helper):
             print(f"Failed to delete due to error: {e}")
             return e
 
-        # instance to view user name in CLI
+    @classmethod
+    def get_all(cls):
+        """Return a list containing a User object per row in the table"""
+        sql = f"""
+            SELECT *
+            FROM {cls.pascal_to_camel_plural()}
+        """
 
-    def display(self):
-        print(f"Username: {self.user_name}")
+        rows = CURSOR.execute(sql).fetchall()
+
+        return [cls.instance_from_db(row) for row in rows]
+
+
+    # ADD TRY AND EXCEPTS
+
+    @classmethod
+    def find_by_name(cls, user_name):
+        """Return a User object corresponding to first table row matching specified user_name"""
+        sql = f"""
+            SELECT *
+            FROM {cls.pascal_to_camel_plural()}
+            WHERE user_name is ?
+        """
+
+        row = CURSOR.execute(sql, (user_name,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+
+    @classmethod
+    def instance_from_db(cls, row):
+        """Return a User object having the attribute values from the table row."""
+
+        # Check the dictionary for an existing instance using the row's primary key
+        user = cls.all.get(row[0])
+        if user:
+            # ensure attributes match row values in case local instance was modified
+            user.user_name = row[1]
+        else:
+            # not in dictionary, create new instance and add to dictionary
+            user = cls(row[1])
+            user.id = row[0]
+            cls.all[user.id] = user
+        return user
+
+    
+    # Returns a list of the user activities the user has saved
+    def get_saved_user_activities(self):
+        from models.user_activity import UserActivity
+        return [user_activity for user_activity in UserActivity.all() if user_activity.user_id == self.id]
+
+    # Returns a list of the activities the user has saved
+    def get_saved_activities(self):
+        from models.user_activity import UserActivity
+        return [user_activity.activity for user_activity in self.get_saved_user_activities()]

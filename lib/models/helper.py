@@ -47,3 +47,35 @@ class Helper(ABC):
                 return [cls.instance_from_db(row) for row in rows]
         except Exception as e:
             return e
+    
+    # @classmethod
+    # def find_by_id(cls, id):
+    #     """Return an object corresponding to the table row matching the specified primary key"""
+    #     sql = f"""
+    #         SELECT *
+    #         FROM {cls.pascal_to_camel_plural()}
+    #         WHERE id = ?
+    #     """
+
+    #     row = CURSOR.execute(sql, (id,)).fetchone()
+    #     return cls.instance_from_db(row) if row else None
+    
+
+    @classmethod
+    def find_by_id(cls, id):
+        try:
+            CURSOR.execute(
+                """
+                SELECT * FROM {cls.pascal_to_camel_plural()}
+                WHERE id = ?;
+                """,
+                (id,),
+            )
+            result = CURSOR.fetchone()
+            if result:
+                return cls(
+                    id=result["id"],
+                )
+        except Exception as e:
+            print(f"Error finding record by id: {e}")
+        return None

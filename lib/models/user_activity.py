@@ -1,7 +1,8 @@
 from models.__init__ import CONN, CURSOR
+from models.helper import Helper
 from models.user import User
 from models.activity import Activity
-from models.helper import Helper
+
 
 
 class UserActivity(Helper):
@@ -156,3 +157,11 @@ class UserActivity(Helper):
             user_activity = cls(row[1], row[2], row[3], row[4], row[5], id=row[0])
             cls.all[user_activity.id] = user_activity
         return user_activity
+
+    @classmethod
+    def create(cls, user_id, activity_id, saved_at, review, rating):
+        new_user_activity = cls(user_id, activity_id, saved_at, review, rating)
+        new_user_activity.save()
+        return new_user_activity
+    
+    

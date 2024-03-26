@@ -1,5 +1,6 @@
 from models.__init__ import CONN, CURSOR
 from models.helper import Helper
+# from models.user_activity import UserActivity
 import ipdb
 
 
@@ -134,9 +135,7 @@ class Activity(Helper):
     #     ratings = self.user_ratings()
     #     return sum(ratings) / len(ratings) or None
 
-    # def print_rating(self):
-    #     rate_level_emojis = "⭐️" * self.rating if self.rating else None
-    #     print(f"{self.name} (ID: {self.activity_id}) | Rating: {rate_level_emojis}")
+   
 
     @classmethod
     def create_table(cls):
@@ -202,3 +201,17 @@ class Activity(Helper):
         new_activity = cls(name, description, activity_type, address, neighborhood, website)
         new_activity.save()
         return new_activity
+    
+    # # # Returns a list of the users that have saved the activity
+    # # def get_users(self):
+    # #     return [user_activity.user for user_activity in UserActivity.all() if user_activity.activity == self]
+
+    # # Returns a list of the user activities the user has saved
+    # def get_saved_user_activities(self):
+    #     from models.user_activity import UserActivity
+    #     return [user_activity for user_activity in UserActivity.all() if user_activity.user_id == self.id]
+
+    # # Returns a list of the activities the user has saved
+    # def get_saved_activities(self):
+    #     from models.user_activity import UserActivity
+    #     return [user_activity.activity for user_activity in self.get_saved_user_activities()]

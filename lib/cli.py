@@ -28,7 +28,7 @@ def main():
                     exit_program()
                 elif choice_sub_1 == "1":
                     browse_all_activities() # Showing objects
-                     # START OF SUB MENU 2 - CREATED USERNAME
+                    # START OF SUB MENU 2 - CREATED USERNAME
                     while True:
                         sub_menu_2()
                         choice_sub_2 = input("> ")
@@ -63,7 +63,7 @@ def main():
 def main_menu():
     print("To get started, please create a username:")
     print("0. Exit the program")
-    print("1. Create a username.")
+    print("1. Create or login with username.")
 
 # After create username
 def sub_menu_1():

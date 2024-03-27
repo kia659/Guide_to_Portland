@@ -1,8 +1,10 @@
 # lib/helpers.py
 
-from models.user import User
 from models.activity import Activity
+from models.user import User
 from models.user_activity import UserActivity
+
+EXIT_WORDS = ["0", "exit", "quit"]
 
 
 def welcome():
@@ -25,16 +27,25 @@ def exit_program():
 
 
 def find_or_create_username():
-    user_name = input("Enter your username: ").strip()
+    while True:  # Loop until a valid username is provided or the user chooses to exit
+        user_name = input("Enter your username: ").strip()
 
-    user = User.find_by_name(user_name)
+        if user_name.lower() in EXIT_WORDS:
+            exit_program()
 
-    if user is None:
-        user = User.create(user_name)
-        print(f"Hi, {user_name}!")
-    else:
-        print(f"Welcome back, {user_name}!")
-    return user
+        user = User.find_by_name(user_name)
+
+        if user is None:
+            try:
+                user = User(user_name)
+                user.save()
+                print(f"Hi, {user_name}!")
+                return user  # Exit the loop and return the user object
+            except (TypeError, ValueError) as e:
+                print(e)
+        else:
+            print(f"Welcome back, {user_name}!")
+            return user  # Exit the loop and return the existing user object
 
 
 # def browse_all_activities():
@@ -73,6 +84,9 @@ def delete_user():
 
 
 def find_activity_by_type():
+    print(
+        "Activity type options: Free Experiences, Food Carts, Breweries & Bars, Shops, Paid Experiences, Restaurants"
+    )
     activity_type = input("Enter the activity type: ")
     activities = Activity.find_by_type(activity_type)
     if activities:

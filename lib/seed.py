@@ -1,9 +1,10 @@
 import csv
 import sqlite3
-from models.activity import Activity
-import ipdb
-from random import sample
 from datetime import datetime
+from random import sample
+
+import ipdb
+from models.activity import Activity
 from models.user import User
 from models.user_activity import UserActivity
 
@@ -37,7 +38,6 @@ class SeedDatabase:
                 values = row.values()
                 a = Activity.create(*values)
                 activities.append(a)
-            # ipdb.set_trace()
 
             kia = User.create("kia")
             kia_activity = UserActivity(

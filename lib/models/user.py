@@ -19,13 +19,10 @@ class User(Helper):
     @user_name.setter
     def user_name(self, user_name):
         if not isinstance(user_name, str):
-            raise TypeError(
-                "Username must be a string."
-            )  # Can you input something that's not a string?
+            raise TypeError("Username must be a string.")  
         elif not 3 <= len(user_name) <= 40:
             raise ValueError("Username must be between 3 and 40 characters long.")
-        elif hasattr(self, "user_name"):
-            raise AttributeError("Username cannot be reset.")
+            ipdb.set_trace()
         else:
             self._user_name = user_name
 

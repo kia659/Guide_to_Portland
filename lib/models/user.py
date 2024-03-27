@@ -130,5 +130,7 @@ class User(Helper):
 
     # Returns a list of the activities the user has saved
     def get_saved_activities(self):
-        from models.user_activity import UserActivity
         return [user_activity.activity for user_activity in self.get_saved_user_activities()]
+
+    def __repr__(self):
+        return f"User(id={self.id}, user_name='{self.user_name}')"

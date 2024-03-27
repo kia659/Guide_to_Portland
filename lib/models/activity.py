@@ -1,5 +1,6 @@
 from models.__init__ import CONN, CURSOR
 from models.helper import Helper
+
 # from models.user_activity import UserActivity
 import ipdb
 
@@ -8,14 +9,13 @@ class Activity(Helper):
 
     all = {}
 
-
     acceptable_activity_types = {
-        "Free Experiences", 
-        "Food Carts", 
-        "Breweries & Bars", 
-        "Shops", 
-        "Paid Experiences", 
-        "Restaurants"
+        "Free Experiences",
+        "Food Carts",
+        "Breweries & Bars",
+        "Shops",
+        "Paid Experiences",
+        "Restaurants",
     }
 
     def __init__(
@@ -61,7 +61,6 @@ class Activity(Helper):
                 "descriptions must be strings with at least one character"
             )
         self._description = value
-        
 
     @property
     def address(self):
@@ -74,8 +73,8 @@ class Activity(Helper):
         if len(components) < 5:
             raise ValueError("Address is too short, seems to be missing components.")
         # is a street number
-        if not components[0].isdigit():
-            raise ValueError("Address must start with a street number.")
+        # if not components[0].isdigit():
+        #     raise ValueError("Address must start with a street number.")
         # is in portland
         if not (
             components[-3].lower() == "portland," and components[-2].lower() == "or"
@@ -87,7 +86,7 @@ class Activity(Helper):
             raise ValueError("ZIP code must start with '97'.")
         self._address = value
 
-# ask steph should we restrict changing the neighborhood :)
+    # ask steph should we restrict changing the neighborhood :)
     @property
     def neighborhood(self):
         return self._neighborhood
@@ -97,7 +96,9 @@ class Activity(Helper):
         if not isinstance(value, str):
             raise TypeError("Neighborhood must be strings")
         elif not 5 <= len(value) <= 30:
-            raise AttributeError("Neighborhood must be at least 5 character and no more than 30")
+            raise AttributeError(
+                "Neighborhood must be at least 5 character and no more than 30"
+            )
         else:
             self._neighborhood = value
 
@@ -113,15 +114,22 @@ class Activity(Helper):
         #     )
         self._website = website
 
-# TEST ME
+    # TEST ME
     @property
     def activity_type(self):
         return self._activity_type
 
     @activity_type.setter
     def activity_type(self, activity_type):
+        import ipdb
+
+        ipdb.set_trace()
         if activity_type not in self.acceptable_activity_types:
-            raise ValueError("Invalid activity type. Please choose from: {}".format(self.acceptable_activity_types))
+            raise ValueError(
+                "Invalid activity type. Please choose from: {}".format(
+                    self.acceptable_activity_types
+                )
+            )
         self._activity_type = activity_type
 
     # def user_ratings(self):
@@ -135,8 +143,6 @@ class Activity(Helper):
         ratings = self.user_ratings()
         ipdb.set_trace()
         return sum(ratings) / len(ratings) or None
-
-   
 
     @classmethod
     def create_table(cls):
@@ -195,16 +201,20 @@ class Activity(Helper):
             activity = cls(row[1], row[2], row[3], row[4], row[5], id=row[0])
             cls.all[activity.id] = activity
         return activity
-    
+
     @classmethod
-    def create(cls, name, description, activity_type, address, neighborhood, website=None):
+    def create(
+        cls, name, description, activity_type, address, neighborhood, website=None
+    ):
         # ipdb.set_trace()
-        new_activity = cls(name, description, activity_type, address, neighborhood, website)
+        new_activity = cls(
+            name, description, activity_type, address, neighborhood, website
+        )
         new_activity.save()
         return new_activity
 
     # ipdb.set_trace()
-    
+
     # # # Returns a list of the users that have saved the activity
     # # def get_users(self):
     # #     return [user_activity.user for user_activity in UserActivity.all() if user_activity.activity == self]

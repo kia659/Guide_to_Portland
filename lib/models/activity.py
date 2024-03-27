@@ -122,9 +122,7 @@ class Activity(Helper):
 
     @activity_type.setter
     def activity_type(self, activity_type):
-        
 
-        
         if activity_type not in self.acceptable_activity_types:
             raise ValueError(
                 "Invalid activity type. Please choose from: {}".format(

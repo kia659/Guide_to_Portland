@@ -108,13 +108,24 @@ class Activity(Helper):
 
     @website.setter
     def website(self, website):
-        if website is not None:
-            if not isinstance(website, str):
-                raise TypeError("Website must be a string")
-            elif not (website.startswith("https://") or website.startswith("https://") or website.startswith("www.")):
-                raise ValueError("Website URL does not start with 'https://', or https://', or www.'")
+        # if website is not None:
+        #     if not isinstance(website, str):
+        #         raise TypeError("Website must be a string")
+        #     elif not (website.startswith("https://") or website.startswith("https://") or website.startswith("www.")):
+        #         raise ValueError("Website URL does not start with 'https://', or https://', or www.'")
         self._website = website
 
+    # @website.setter
+    # def website(self, website):
+    #     if website is not None:
+    #         if not isinstance(website, str):
+    #             raise TypeError("Website must be a string")
+            
+    #         # Check if the website starts with a valid scheme
+    #         valid_schemes = ("http://", "https://", "www.")
+    #         if not any(website.startswith(scheme) for scheme in valid_schemes):
+    #             raise ValueError("Website URL must start with 'http://', 'https://', or 'www.'")
+    #     self._website = website
 
     @property
     def activity_type(self):
@@ -180,6 +191,7 @@ class Activity(Helper):
                         self.address,
                         self.neighborhood,
                         self.website,
+                        
                     ),
                 )
             self.id = CURSOR.lastrowid
@@ -192,11 +204,12 @@ class Activity(Helper):
         if activity:
             activity.name = row[1]
             activity.description = row[2]
-            activity.neighborhood = row[3]
-            activity.website = row[4]
-            activity.activity_type = row[5]
+            activity.activity_type = row[3]
+            activity.address = row[4]
+            activity.neighborhood = row[5]
+            activity.website = row[6]
         else:
-            activity = cls(row[1], row[2], row[3], row[4], row[5], id=row[0])
+            activity = cls(row[1], row[2], row[3], row[4], row[5], row[6], id=row[0])
             cls.all[activity.id] = activity
         return activity
 

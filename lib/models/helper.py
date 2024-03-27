@@ -1,6 +1,7 @@
 from models.__init__ import CONN, CURSOR
 import re
 from abc import ABC
+import ipdb
 
 
 class Helper(ABC):
@@ -45,6 +46,7 @@ class Helper(ABC):
                 result = CURSOR.execute(f"SELECT * FROM {cls.pascal_to_camel_plural()}")
                 rows = result.fetchall()
                 return [cls.instance_from_db(row) for row in rows]
+                ipdb.set_trace()
         except Exception as e:
             return e
 

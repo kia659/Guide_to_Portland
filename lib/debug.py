@@ -24,4 +24,3 @@ from models.helper import Helper
 # user_activity1 = UserActivity(user1.id, activity1.id, datetime.now(), "review", 5)
 # user_activity1.save()
 
-ipdb.set_trace()

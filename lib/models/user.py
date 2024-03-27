@@ -1,6 +1,6 @@
 from models.__init__ import CURSOR, CONN
 from models.helper import Helper
-# import ipdb
+import ipdb
 # from models.user_activity import UserActivity
 
 class User(Helper):

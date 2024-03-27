@@ -131,9 +131,10 @@ class Activity(Helper):
     #         if user_activity.activity_id == self.id and user_activity.rating is not None
     #     ]
 
-    # def average_rating(self):
-    #     ratings = self.user_ratings()
-    #     return sum(ratings) / len(ratings) or None
+    def average_rating(self):
+        ratings = self.user_ratings()
+        ipdb.set_trace()
+        return sum(ratings) / len(ratings) or None
 
    
 
@@ -201,6 +202,8 @@ class Activity(Helper):
         new_activity = cls(name, description, activity_type, address, neighborhood, website)
         new_activity.save()
         return new_activity
+
+    ipdb.set_trace()
     
     # # # Returns a list of the users that have saved the activity
     # # def get_users(self):

@@ -203,7 +203,7 @@ class Activity(Helper):
         new_activity.save()
         return new_activity
 
-    ipdb.set_trace()
+    # ipdb.set_trace()
     
     # # # Returns a list of the users that have saved the activity
     # # def get_users(self):

@@ -24,7 +24,7 @@ activity1 = Activity(
     "Free Experiences",
     "123 S main street, Portland, OR 97205",
     "Arlington Heights",
-    "https://www.test.com",
+    "www.test.com",
 )
 # activity1.save()
 # user_activity1 = UserActivity(user1.id, activity1.id, datetime.now(), "review", 5)

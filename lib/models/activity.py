@@ -101,29 +101,30 @@ class Activity(Helper):
             )
         else:
             self._neighborhood = value
-
+    
     @property
     def website(self):
         return self._website
 
     @website.setter
     def website(self, website):
-        # if not website.startswith("http://") or website.startswith("https://"):
-        #     raise ValueError(
-        #         "Invalid URL. URL must start with 'http://' or 'https://'."
-        #     )
+        if website is not None:
+            if not isinstance(website, str):
+                raise TypeError("Website must be a string")
+            elif not (website.startswith("https://") or website.startswith("https://") or website.startswith("www.")):
+                raise ValueError("Website URL does not start with 'https://', or https://', or www.'")
         self._website = website
 
-    # TEST ME
+
     @property
     def activity_type(self):
         return self._activity_type
 
     @activity_type.setter
     def activity_type(self, activity_type):
-        import ipdb
+        
 
-        ipdb.set_trace()
+        
         if activity_type not in self.acceptable_activity_types:
             raise ValueError(
                 "Invalid activity type. Please choose from: {}".format(

@@ -26,31 +26,53 @@ class SeedDatabase:
             raise RuntimeError("Database connection not established.")
 
         # Opens the CSV file for reading as a text file, ensuring it is UTF-8 encoded, and handling newline characters appropriately
-        with open(csv_file, 'r', newline='', encoding='utf-8') as file:
+        with open(csv_file, "r", newline="", encoding="utf-8") as file:
             # Creates a CSV reader object (reader) using DictReader, which interprets each row of the CSV file as a dictionary where keys are column headers and values are cell values
             reader = csv.DictReader(file)
             cursor = self.connection.cursor()
+            import ipdb
 
-            activities = [Activity.create(*row) for row in reader]
-
+            activities = []
+            for index, row in enumerate(reader):
+                values = row.values()
+                a = Activity.create(*values)
+                activities.append(a)
+            ipdb.set_trace()
 
             kia = User.create("kia")
-            kia_activity = UserActivity(kia.id, sample(activities, 1)[0].id, datetime.now(), "ehh, it was ok.", 2)
+            kia_activity = UserActivity(
+                kia.id,
+                sample(activities, 1)[0].id,
+                datetime.now(),
+                "ehh, it was ok.",
+                2,
+            )
             kia_activity.save()
             steph = User.create("steph")
-            steph_activity = UserActivity(steph.id, sample(activities, 1)[0].id, datetime.now(), "So fun!", 5)
+            steph_activity = UserActivity(
+                steph.id, sample(activities, 1)[0].id, datetime.now(), "So fun!", 5
+            )
             steph_activity.save()
             xen = User.create("xen")
-            xen_activity = UserActivity(xen.id, sample(activities, 1)[0].id, datetime.now(), "we had a great time!", 4)
+            xen_activity = UserActivity(
+                xen.id,
+                sample(activities, 1)[0].id,
+                datetime.now(),
+                "we had a great time!",
+                4,
+            )
             xen_activity.save()
             matteo = User.create("matteo")
-            matteo_activity = UserActivity(matteo.id, sample(activities, 1)[0].id, datetime.now(), "awesome!", 5)
+            matteo_activity = UserActivity(
+                matteo.id, sample(activities, 1)[0].id, datetime.now(), "awesome!", 5
+            )
             matteo_activity.save()
-                # cursor.execute(
-                #     "INSERT INTO activities (name, description, activity_type, website, address, neighborhood) VALUES (?, ?, ?, ?, ?, ?)",
-                #     (row['name'], row['description'], row['activity_type'], row['website'], row['address'], row['neighborhood'])
-                # )
-                # self.connection.commit()
+            # cursor.execute(
+            #     "INSERT INTO activities (name, description, activity_type, website, address, neighborhood) VALUES (?, ?, ?, ?, ?, ?)",
+            #     (row['name'], row['description'], row['activity_type'], row['website'], row['address'], row['neighborhood'])
+            # )
+            # self.connection.commit()
+
 
 # Checks if the script is being run directly as the main program
 if __name__ == "__main__":

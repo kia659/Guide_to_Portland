@@ -2,8 +2,7 @@
 # lib/debug.py
 
 from models.__init__ import CONN, CURSOR
-import ipdb
-from models.user_activity import UserActivity 
+from models.user_activity import UserActivity
 from models.user import User
 from models.activity import Activity
 from datetime import datetime
@@ -19,8 +18,18 @@ from models.helper import Helper
 # UserActivity.create_table()
 # user1 = User("steph")
 # user1.save()
-# activity1 = Activity("Test Debug Experience", "Description for experience.","Free Experiences","123 S main street, Portland, OR 97205","Arlington Heights", "https://www.test.com")
+activity1 = Activity(
+    "Test Debug Experience",
+    "Description for experience.",
+    "Free Experiences",
+    "123 S main street, Portland, OR 97205",
+    "Arlington Heights",
+    "https://www.test.com",
+)
 # activity1.save()
 # user_activity1 = UserActivity(user1.id, activity1.id, datetime.now(), "review", 5)
 # user_activity1.save()
+if __name__ == "__main__":
+    import ipdb
 
+    ipdb.set_trace()

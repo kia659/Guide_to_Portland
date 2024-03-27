@@ -101,7 +101,7 @@ class Activity(Helper):
             )
         else:
             self._neighborhood = value
-    
+
     @property
     def website(self):
         return self._website
@@ -120,7 +120,7 @@ class Activity(Helper):
     #     if website is not None:
     #         if not isinstance(website, str):
     #             raise TypeError("Website must be a string")
-            
+
     #         # Check if the website starts with a valid scheme
     #         valid_schemes = ("http://", "https://", "www.")
     #         if not any(website.startswith(scheme) for scheme in valid_schemes):
@@ -133,6 +133,7 @@ class Activity(Helper):
 
     @activity_type.setter
     def activity_type(self, activity_type):
+
         if activity_type not in self.acceptable_activity_types:
             raise ValueError(
                 "Invalid activity type. Please choose from: {}".format(
@@ -191,7 +192,6 @@ class Activity(Helper):
                         self.address,
                         self.neighborhood,
                         self.website,
-                        
                     ),
                 )
             self.id = CURSOR.lastrowid

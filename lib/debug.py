@@ -20,6 +20,7 @@ from models.user_activity import UserActivity
 user1 = User("steph")
 User.get_saved_user_activities()
 # user1.save()
+
 activity1 = Activity(
     "Test Debug Experience",
     "Description for experience.",
@@ -28,6 +29,7 @@ activity1 = Activity(
     "Arlington Heights",
     "www.test.com",
 )
+
 # activity1.save()
 # user_activity1 = UserActivity(user1.id, activity1.id, datetime.now(), "review", 5)
 # user_activity1.save()

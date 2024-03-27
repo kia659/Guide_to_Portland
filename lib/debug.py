@@ -16,16 +16,17 @@ from models.helper import Helper
 # User.create_table()
 # Activity.create_table()
 # UserActivity.create_table()
-# user1 = User("steph")
+user1 = User("steph")
+User.get_saved_user_activities()
 # user1.save()
-activity1 = Activity(
-    "Test Debug Experience",
-    "Description for experience.",
-    "Free Experiences",
-    "123 S main street, Portland, OR 97205",
-    "Arlington Heights",
-    "https://www.test.com",
-)
+# activity1 = Activity(
+#     "Test Debug Experience",
+#     "Description for experience.",
+#     "Free Experiences",
+#     "123 S main street, Portland, OR 97205",
+#     "Arlington Heights",
+#     "https://www.test.com",
+# )
 # activity1.save()
 # user_activity1 = UserActivity(user1.id, activity1.id, datetime.now(), "review", 5)
 # user_activity1.save()

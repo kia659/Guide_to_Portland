@@ -37,7 +37,7 @@ class SeedDatabase:
                 values = row.values()
                 a = Activity.create(*values)
                 activities.append(a)
-            ipdb.set_trace()
+            # ipdb.set_trace()
 
             kia = User.create("kia")
             kia_activity = UserActivity(
@@ -54,14 +54,22 @@ class SeedDatabase:
             )
             steph_activity.save()
             xen = User.create("xen")
-            xen_activity = UserActivity(
+            xen_activity1 = UserActivity(
                 xen.id,
                 sample(activities, 1)[0].id,
                 datetime.now(),
                 "we had a great time!",
                 4,
             )
-            xen_activity.save()
+            xen_activity1.save()
+            xen_activity2 = UserActivity(
+                xen.id,
+                sample(activities, 1)[0].id,
+                datetime.now(),
+                "we had a great time!",
+                4,
+            )
+            xen_activity2.save()
             matteo = User.create("matteo")
             matteo_activity = UserActivity(
                 matteo.id, sample(activities, 1)[0].id, datetime.now(), "awesome!", 5

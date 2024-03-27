@@ -9,8 +9,9 @@ from helpers import (
     delete_user,
     find_activity_by_type,
     find_activity_by_neighborhood,
-    find_activity_by_rating
+    find_activity_by_rating,
 )
+
 
 def main():
     while True:
@@ -27,7 +28,7 @@ def main():
                 if choice_sub_1 == "0":
                     exit_program()
                 elif choice_sub_1 == "1":
-                    browse_all_activities() # Showing objects
+                    browse_all_activities()  # Showing objects
                     # START OF SUB MENU 2 - CREATED USERNAME
                     while True:
                         sub_menu_2()
@@ -45,25 +46,31 @@ def main():
                         elif choice_sub_2 == "5":
                             pass
                         elif choice_sub_2 == "6":
-                            saved_activities() # TypeError: get_saved_user_activities() missing 1 required positional argument: 'self'
+                            saved_activities(
+                                user
+                            )  # TypeError: get_saved_user_activities() missing 1 required positional argument: 'self'
                         else:
                             print("Invalid choice")
                     # END OF SUB MENU 2
                 elif choice_sub_1 == "2":
-                    saved_activities() # TypeError: get_saved_user_activities() missing 1 required positional argument: 'self'
+                    saved_activities(
+                        user
+                    )  # TypeError: get_saved_user_activities() missing 1 required positional argument: 'self'
                 elif choice_sub_1 == "3":
-                    delete_user() # Need confirmation message
+                    delete_user()  # Need confirmation message
                 else:
                     print("Invalid choice")
             # END OF SUB MENU 1
         else:
             print("Invalid choice")
 
+
 # Starting program
 def main_menu():
     print("To get started, please create a username:")
     print("0. Exit the program")
     print("1. Create or login with username.")
+
 
 # After create username
 def sub_menu_1():
@@ -72,6 +79,7 @@ def sub_menu_1():
     print("1. Browse activities in Portland.")
     print("2. View saved activities.")
     print("3. Delete user.")
+
 
 # Clicked "Browse Activities"
 def sub_menu_2():
@@ -84,6 +92,7 @@ def sub_menu_2():
     print("5. Add a new activity.")
     print("6. View all saved activities.")
 
+
 # # Clicked "View Saved Activities"
 # def sub_menu_3():
 #     print("Please select an option:")
@@ -92,10 +101,8 @@ def sub_menu_2():
 #     print("2. Add rating & review to activity.")
 #     print("3. Delete activity from saved list.")
 #     print("4. Browse all activities.")
-            
+
 
 if __name__ == "__main__":
     welcome()
     main()
-
-

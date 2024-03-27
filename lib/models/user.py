@@ -1,7 +1,9 @@
 from models.__init__ import CURSOR, CONN
 from models.helper import Helper
 import ipdb
+
 # from models.user_activity import UserActivity
+
 
 class User(Helper):
 
@@ -19,7 +21,7 @@ class User(Helper):
     @user_name.setter
     def user_name(self, user_name):
         if not isinstance(user_name, str):
-            raise TypeError("Username must be a string.")  
+            raise TypeError("Username must be a string.")
         elif not 3 <= len(user_name) <= 40:
             raise ValueError("Username must be between 3 and 40 characters long.")
             ipdb.set_trace()
@@ -49,7 +51,7 @@ class User(Helper):
                         INSERT INTO {type(self).pascal_to_camel_plural()}  (user_name)
                         VALUES (?);
                     """,
-                    (self.user_name,)
+                    (self.user_name,),
                 )
                 self.id = CURSOR.lastrowid
         except Exception as e:
@@ -88,7 +90,6 @@ class User(Helper):
 
         return [cls.instance_from_db(row) for row in rows]
 
-
     # ADD TRY AND EXCEPTS
 
     @classmethod
@@ -119,15 +120,24 @@ class User(Helper):
             cls.all[user.id] = user
         return user
 
-    
     # Returns a list of the user activities the user has saved
+    # list of joint object - the user has many user activites
     def get_saved_user_activities(self):
         from models.user_activity import UserActivity
-        return [user_activity for user_activity in UserActivity.all() if user_activity.user_id == self.id]
+
+        return [
+            user_activity
+            for user_activity in UserActivity.get_all()
+            if user_activity.user_id == self.id
+        ]
 
     # Returns a list of the activities the user has saved
     def get_saved_activities(self):
-        return [user_activity.activity for user_activity in self.get_saved_user_activities()]
+
+        return [
+            user_activity.activity()
+            for user_activity in self.get_saved_user_activities()
+        ]
 
     def __repr__(self):
         return f"User(id={self.id}, user_name='{self.user_name}')"

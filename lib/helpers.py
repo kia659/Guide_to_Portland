@@ -3,6 +3,7 @@
 from models.activity import Activity
 from models.user import User
 from models.user_activity import UserActivity
+import ipdb
 
 EXIT_WORDS = ["0", "exit", "quit"]
 
@@ -95,6 +96,16 @@ def find_activity_by_type():
             print(activity)
     else:
         print(f"No activities of type '{activity_type}' found.")
+        print("Activity type options: Free Experiences, Food Carts, Breweries & Bars, Shops, Paid Experiences, Restaurants")
+        activity_type = input("Enter the activity type: ")
+        activities = Activity.find_by_type(activity_type)
+        if activities:
+            print(f"Activities of type '{activity_type}':")
+            for activity in activities:  
+                print(activity)
+        else:    
+            print(f"No activities of type '{activity_type}' found.")
+        ipdb.set_trace()
 
 
 def find_activity_by_neighborhood():
@@ -128,6 +139,16 @@ def add_new_activity():
 
 
 def updaterating_review_activity():
+
+
+
+
+
+
+
+
+    
+def update_rating_review_activity():
     id = input("Enter the activity id:")
     if activity := UserActivity.findby_id(id):
         try:
@@ -138,7 +159,7 @@ def updaterating_review_activity():
             )
             activity.rating = rating
 
-            activity.updaterating_and_review()
+            activity.update_rating_and_review()
             print(f"Success: {activity}")
         except Exception as exc:
             print("Error updating rating and review: ", exc)

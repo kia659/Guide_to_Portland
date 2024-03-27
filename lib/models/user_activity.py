@@ -4,23 +4,22 @@ from models.user import User
 from models.activity import Activity
 
 
-
 class UserActivity(Helper):
 
     # Dictionary of objects saved to the database.
     all = {}
 
     def __init__(
-        self, user_id, activity_id, saved_at, review, rating
+        self, user_id, activity_id, saved_at, review, rating, id_=None
     ):  # Figure out how the review/ratings will work. Should sit on Activity as well?
+        self.id = id_
         self.user_id = user_id
         self.activity_id = activity_id
         self.saved_at = saved_at
         self.review = review
         self.rating = rating
 
-# Double check that there should be no properties for: user_id, activity_id, saved_at
-
+    # Double check that there should be no properties for: user_id, activity_id, saved_at
 
     @property
     def review(self):
@@ -145,8 +144,21 @@ class UserActivity(Helper):
             return e
 
     @classmethod
+    def get_all(cls):
+        try:
+            with CONN:
+                result = CURSOR.execute(f"SELECT * FROM {cls.pascal_to_camel_plural()}")
+                rows = result.fetchall()
+                return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            return e
+
+    @classmethod
     def instance_from_db(cls, row):
         user_activity = cls.all.get(row[0])
+        import ipdb
+
+        ipdb.set_trace()
         if user_activity:
             user_activity.user_id = row[1]
             user_activity.activity_id = row[2]
@@ -154,7 +166,7 @@ class UserActivity(Helper):
             user_activity.review = row[4]
             user_activity.rating = row[5]
         else:
-            user_activity = cls(row[1], row[2], row[3], row[4], row[5], id=row[0])
+            user_activity = cls(row[1], row[2], row[3], row[4], row[5], row[0])
             cls.all[user_activity.id] = user_activity
         return user_activity
 
@@ -163,5 +175,6 @@ class UserActivity(Helper):
         new_user_activity = cls(user_id, activity_id, saved_at, review, rating)
         new_user_activity.save()
         return new_user_activity
-    
-    
+
+    def activity(self):
+        return Activity.find_by_id(self.activity_id)

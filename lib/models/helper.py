@@ -46,7 +46,6 @@ class Helper(ABC):
                 result = CURSOR.execute(f"SELECT * FROM {cls.pascal_to_camel_plural()}")
                 rows = result.fetchall()
                 return [cls.instance_from_db(row) for row in rows]
-                ipdb.set_trace()
         except Exception as e:
             return e
 
@@ -68,7 +67,7 @@ class Helper(ABC):
         except Exception as e:
             print(f"Error finding record by id: {e}")
         return None
-        
+
     @classmethod
     def find_by_name(cls, name):
         try:
@@ -79,7 +78,7 @@ class Helper(ABC):
                 return [cls.instance_from_db(row) for row in rows]
         except Exception as e:
             return e
-        
+
     @classmethod
     def find_by_rating(cls, rating):
         try:
@@ -90,7 +89,7 @@ class Helper(ABC):
                 return [cls.instance_from_db(row) for row in rows]
         except Exception as e:
             return e
-        
+
     @classmethod
     def find_by_neighborhood(cls, neighborhood):
         try:
@@ -101,7 +100,7 @@ class Helper(ABC):
                 return [cls.instance_from_db(row) for row in rows]
         except Exception as e:
             return e
-    
+
     @classmethod
     def find_by_type(cls, activity_type):
         try:
@@ -112,4 +111,3 @@ class Helper(ABC):
                 return [cls.instance_from_db(row) for row in rows]
         except Exception as e:
             return e
-        

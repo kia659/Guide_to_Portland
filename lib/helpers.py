@@ -115,8 +115,8 @@ def find_activity_by_neighborhood():
 
 
 def find_activity_by_rating():
-    rating = int(input("Enter the rating: "))
-    activities = Activity.find_by_rating(rating)
+    rating = int(input("Enter the rating 1 - 5: "))
+    activities = Activity.rated_activities(rating)
     if activities:
         print(f"Activities with rating '{rating}':")
         for activity in activities:
@@ -125,6 +125,17 @@ def find_activity_by_rating():
                 print(f"{attr}: {value}")
     else:
         print(f"No activities with rating '{rating}' found.")
+
+
+    # rating = int(input("Enter the rating 1 - 5: "))
+    # activities = Activity.find_by_rating(rating)
+    # if activities:
+    #     print(f"Activities with rating '{rating}':")
+    #     for activity in activities:
+    #         print(activity)
+    # else:
+    #     print(f"No activities with rating '{rating}' found.")
+
 
 # Why can input zero?
         

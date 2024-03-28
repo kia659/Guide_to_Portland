@@ -96,6 +96,9 @@ def find_activity_by_type():
 
 
 def find_activity_by_neighborhood():
+    print(
+        "Examples of neighborhoods in Portland: Pearl District, Hawthorne, Alberta, Division, Clinton, Mississippi, St. Johns, Arlington Heights"
+    )
     neighborhood = input("Enter the neighborhood: ")
     activities = Activity.find_by_neighborhood(neighborhood)
     if activities:

@@ -121,10 +121,9 @@ class User(Helper):
         return user
 
     # Returns a list of the user activities the user has saved
-    # list of joint object - the user has many user activites
+    # list of joint object - the user has many user activities
     def get_saved_user_activities(self):
         from models.user_activity import UserActivity
-
         return [
             user_activity
             for user_activity in UserActivity.get_all()
@@ -133,7 +132,6 @@ class User(Helper):
 
     # Returns a list of the activities the user has saved
     def get_saved_activities(self):
-
         return [
             user_activity.activity()
             for user_activity in self.get_saved_user_activities()

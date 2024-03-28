@@ -141,12 +141,16 @@ def find_activity_by_rating():
         
 def save_to_activities(user):
     try:
-        total_activities = len(Activity.get_all())
+        # total_activities = len(Activity.get_all())
 
         saved_activity_id = int(input("Enter the id # for the activity you would like to save: "))
-        if 0 < saved_activity_id <= total_activities:
-            UserActivity.create(user.id, saved_activity_id, datetime.now())
-            print("Activity has been saved!")
+        activity = Activity.find_by_id(saved_activity_id)
+        if activity:
+            if activity not in user.get_saved_activities():
+                UserActivity.create(user.id, saved_activity_id, datetime.now())
+                print("Activity has been saved!")
+            else:
+                print("You've already saved this activity.") 
         else:
             print("Error: Please choose a valid id number for the activity.")
     except ValueError:

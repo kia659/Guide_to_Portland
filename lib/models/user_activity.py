@@ -178,3 +178,8 @@ class UserActivity(Helper):
 
     def rating_review(self):
         return Activity.find_by_rating(self.rating)
+    
+
+
+    def user(self):
+        return User.find_by_id(self.user_id)

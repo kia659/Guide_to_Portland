@@ -1,7 +1,6 @@
 from models.__init__ import CONN, CURSOR
 from models.helper import Helper
 
-# from models.user_activity import UserActivity
 import ipdb
 
 
@@ -198,28 +197,19 @@ class Activity(Helper):
         new_activity.save()
         return new_activity
 
-    # list of joint object - the user has many user rated activites
+    # Get all of the user activities for a specific activity
     def get_user_activities(self):
         from models.user_activity import UserActivity
+        return [user_activity for user_activity in UserActivity.get_all() if user_activity.activity_id == self.id]
 
-        return [
-            user_activity
-            for user_activity in UserActivity.get_all()
-            if user_activity == self.id
-        ]
+    def get_users(self):
+        return [user_activity.user() for user_activity in self.get_user_activities()]
+
+
 
     # Returns a list of the activities rated activities
     def rated_activities(self):
         ipdb.set_trace()
         return [rating.rating_review() for rating in self.get_user_activities()]
 
-    # def user_ratings(self):
-    #     return [
-    #         user_activity.rating
-    #         for user_activity in UserActivity.all.values()
-    #         if user_activity.activity_id == self.id and user_activity.rating is not None
-    #     ]
-
-    def average_rating(self):
-        ratings = self.user_ratings()
-        return sum(ratings) / len(ratings) or None
+    

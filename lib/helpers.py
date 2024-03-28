@@ -3,7 +3,9 @@
 from models.user import User
 from models.activity import Activity
 from models.user_activity import UserActivity
+from datetime import datetime
 import ipdb
+
 
 EXIT_WORDS = ["0", "exit", "quit"]
 
@@ -23,9 +25,10 @@ def welcome():
 
 
 def exit_program():
-    print("Goodbye!")
+    print("See ya! Hope you enjoy exploring Portland!")
     exit()
 
+# MAIN MENU
 
 def find_or_create_username():
     while True:  # Loop until a valid username is provided or the user chooses to exit
@@ -48,7 +51,6 @@ def find_or_create_username():
             print(f"Welcome back, {user_name}!")
             return user  # Exit the loop and return the existing user object
 
-
 def browse_all_activities():
     activities = Activity.get_all()
     for activity in activities:
@@ -56,16 +58,16 @@ def browse_all_activities():
         for attr, value in attrs.items():
             print(f"{attr}: {value}")
 
-
-def saved_activities(user):
+def view_saved_activities(user):
     saved_activities = user.get_saved_activities()
     if saved_activities:
         print("Saved Activities:")
         for activity in saved_activities:
-            print(activity)
+            activity_attrs = vars(activity)
+            for attr, value in activity_attrs.items():
+                print(f"{attr}: {value}")
     else:
         print("No saved activities found.")
-
 
 def delete_user():
     user_name = input("Enter your username: ").strip()
@@ -73,12 +75,12 @@ def delete_user():
     user = User.find_by_name(user_name)
     if user:
         user.delete()
+        print("You have successfully deleted username: {user_name}")
     else:
         print(f"Could not find {user_name}.")
 
 
-# START OF SUB MENU 2
-
+# SUB MENU 2
 
 def find_activity_by_type():
     print(
@@ -87,9 +89,11 @@ def find_activity_by_type():
     activity_type = input("Enter the activity type: ")
     activities = Activity.find_by_type(activity_type)
     if activities:
-        print(f"Activities of type '{activity_type}':")
+        print(f"Here are the '{activity_type}':")
         for activity in activities:
-            print(activity)
+            attrs = vars(activity)
+            for attr, value in attrs.items():
+                print(f"{attr}: {value}")
     else:
         print(f"No activities of type '{activity_type}' found.")
 
@@ -103,7 +107,9 @@ def find_activity_by_neighborhood():
     if activities:
         print(f"Activities in '{neighborhood}':")
         for activity in activities:
-            print(activity)
+            attrs = vars(activity)
+            for attr, value in attrs.items():
+                print(f"{attr}: {value}")
     else:
         print(f"No activities found in '{neighborhood}'.")
 
@@ -114,9 +120,12 @@ def find_activity_by_rating():
     if activities:
         print(f"Activities with rating '{rating}':")
         for activity in activities:
-            print(activity)
+            attrs = vars(activity)
+            for attr, value in attrs.items():
+                print(f"{attr}: {value}")
     else:
         print(f"No activities with rating '{rating}' found.")
+
 
     # rating = int(input("Enter the rating 1 - 5: "))
     # activities = Activity.find_by_rating(rating)
@@ -128,17 +137,43 @@ def find_activity_by_rating():
     #     print(f"No activities with rating '{rating}' found.")
 
 
-def save_to_activities():
-    pass
+# Why can input zero?
+        
+def save_to_activities(user):
+    try:
+        total_activities = len(Activity.get_all())
+
+        saved_activity_id = int(input("Enter the id # for the activity you would like to save: "))
+        if 0 < saved_activity_id <= total_activities:
+            UserActivity.create(user.id, saved_activity_id, datetime.now())
+            print("Activity has been saved!")
+        else:
+            print("Error: Please choose a valid id number for the activity.")
+    except ValueError:
+        print("Error: Please enter a valid integer id number for the activity.")
 
 
 def add_new_activity():
-    pass
+    try:
+        name = input("Enter the name of the activity: ").strip()
+        description = input("Enter the description of the activity: ").strip()
+        activity_type = input("Enter the type of activity (choose from Free Experiences, Food Carts, Breweries & Bars, Shops, Paid Experiences, Restaurants): ").strip()
+        address = input("Enter the address of the activity: ").strip()
+        neighborhood = input("Enter the neighborhood of the activity: ").strip()
+        website = input("Enter the website of the activity (optional, press Enter to skip): ").strip()
+
+        new_activity = Activity.create(name, description, activity_type, address, neighborhood, website)
+        
+        print("New activity successfully added!")
+        return new_activity 
+    except Exception as e:
+        print(f"Error adding new activity: {e}")
+        return None
 
 
 def update_rating_review_activity():
-    id = input("Enter the activity id:")
-    if activity := UserActivity.findby_id(id):
+    activity_id = input("Enter the activity id:")
+    if activity := UserActivity.findby_id(activity_id):
         try:
             review = input("Enter the Review: ")
             activity.review = review
@@ -152,7 +187,7 @@ def update_rating_review_activity():
         except Exception as exc:
             print("Error updating rating and review: ", exc)
     else:
-        print(f"Activity {id} not found")
+        print(f"Activity {activity_id} not found")
 
 
 # def print_rating(self):

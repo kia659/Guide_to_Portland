@@ -47,18 +47,24 @@ class SeedDatabase:
                 2,
             )
             kia_activity.save()
+            
             steph = User.create("steph")
             steph_activity = UserActivity(
                 steph.id, sample(activities, 1)[0].id, datetime.now(), "So fun!", 5
             )
             steph_activity.save()
+            steph_activity2 = UserActivity(
+                steph.id, sample(activities, 1)[0].id, datetime.now(), "Really enjoyed this!", 5
+            )
+            steph_activity2.save()
+            
             xen = User.create("xen")
             xen_activity = UserActivity(
                 xen.id,
                 sample(activities, 1)[0].id,
                 datetime.now(),
                 "we had a great time!",
-                4,
+                5,
             )
             xen_activity.save()
             matteo = User.create("matteo")
@@ -66,6 +72,10 @@ class SeedDatabase:
                 matteo.id, sample(activities, 1)[0].id, datetime.now(), "awesome!", 5
             )
             matteo_activity.save()
+            matteo_activity2 = UserActivity(
+            matteo.id, sample(activities, 1)[0].id, datetime.now(), "loved this!", 4
+            )
+            matteo_activity2.save()
             # cursor.execute(
             #     "INSERT INTO activities (name, description, activity_type, website, address, neighborhood) VALUES (?, ?, ?, ?, ?, ?)",
             #     (row['name'], row['description'], row['activity_type'], row['website'], row['address'], row['neighborhood'])

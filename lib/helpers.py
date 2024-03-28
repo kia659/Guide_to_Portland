@@ -3,7 +3,9 @@
 from models.user import User
 from models.activity import Activity
 from models.user_activity import UserActivity
+from datetime import datetime
 import ipdb
+
 
 EXIT_WORDS = ["0", "exit", "quit"]
 
@@ -23,9 +25,10 @@ def welcome():
 
 
 def exit_program():
-    print("Goodbye!")
+    print("See ya! Hope you enjoy exploring Portland!")
     exit()
 
+# MAIN MENU
 
 def find_or_create_username():
     while True:  # Loop until a valid username is provided or the user chooses to exit
@@ -48,7 +51,6 @@ def find_or_create_username():
             print(f"Welcome back, {user_name}!")
             return user  # Exit the loop and return the existing user object
 
-
 def browse_all_activities():
     activities = Activity.get_all()
     for activity in activities:
@@ -56,16 +58,16 @@ def browse_all_activities():
         for attr, value in attrs.items():
             print(f"{attr}: {value}")
 
-
-def saved_activities(user):
+def view_saved_activities(user):
     saved_activities = user.get_saved_activities()
     if saved_activities:
         print("Saved Activities:")
         for activity in saved_activities:
-            print(activity)
+            activity_attrs = vars(activity)
+            for attr, value in activity_attrs.items():
+                print(f"{attr}: {value}")
     else:
         print("No saved activities found.")
-
 
 def delete_user():
     user_name = input("Enter your username: ").strip()
@@ -73,12 +75,12 @@ def delete_user():
     user = User.find_by_name(user_name)
     if user:
         user.delete()
+        print("You have successfully deleted username: {user_name}")
     else:
         print(f"Could not find {user_name}.")
 
 
-# START OF SUB MENU 2
-
+# SUB MENU 2
 
 def find_activity_by_type():
     print(
@@ -117,8 +119,12 @@ def find_activity_by_rating():
         print(f"No activities with rating '{rating}' found.")
 
 
-def save_to_activities():
-    pass
+def save_to_activities(user):
+    saved_activity_id = int(input("Enter the id # for the activity you would like to save: "))
+    if saved_activity_id >=0:
+        UserActivity.create(user.id, saved_activity_id, datetime.now)
+    else:
+        print("Error saving your activity. Choose another id number.")
 
 
 def add_new_activity():

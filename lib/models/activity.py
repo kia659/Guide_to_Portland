@@ -196,7 +196,22 @@ class Activity(Helper):
             name, description, activity_type, address, neighborhood, website
         )
         new_activity.save()
-        return new_activity
+
+    @classmethod
+    def find_by_rating(cls, rating):
+        try:
+            return [
+                activity
+                for activity in cls.get_all()
+                if activity.get_rating() == rating
+            ]
+            # with CONN:
+            #     query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE rating = ?"
+            #     result = CURSOR.execute(query, (rating,))
+            #     rows = result.fetchall()
+            #     return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            return e
 
     # list of joint object - the user has many user rated activites
     def get_user_activities(self):
@@ -205,21 +220,9 @@ class Activity(Helper):
         return [
             user_activity
             for user_activity in UserActivity.get_all()
-            if user_activity == self.id
+            if user_activity.activity_id == self.id
         ]
 
-    # Returns a list of the activities rated activities
-    def rated_activities(self):
-        ipdb.set_trace()
-        return [rating.rating_review() for rating in self.get_user_activities()]
-
-    # def user_ratings(self):
-    #     return [
-    #         user_activity.rating
-    #         for user_activity in UserActivity.all.values()
-    #         if user_activity.activity_id == self.id and user_activity.rating is not None
-    #     ]
-
-    def average_rating(self):
-        ratings = self.user_ratings()
-        return sum(ratings) / len(ratings) or None
+    def get_rating(self):
+        ratings = [user_activity.rating for user_activity in self.get_user_activities()]
+        return round(sum(ratings) / len(ratings)) if ratings else None

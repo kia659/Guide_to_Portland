@@ -118,13 +118,20 @@ def find_activity_by_rating():
     else:
         print(f"No activities with rating '{rating}' found.")
 
-
+# Why can input zero?
+        
 def save_to_activities(user):
-    saved_activity_id = int(input("Enter the id # for the activity you would like to save: "))
-    if saved_activity_id >=0:
-        UserActivity.create(user.id, saved_activity_id, datetime.now)
-    else:
-        print("Error saving your activity. Choose another id number.")
+    try:
+        total_activities = len(Activity.get_all())
+
+        saved_activity_id = int(input("Enter the id # for the activity you would like to save: "))
+        if 0 < saved_activity_id <= total_activities:
+            UserActivity.create(user.id, saved_activity_id, datetime.now())
+            print("Activity has been saved!")
+        else:
+            print("Error: Please choose a valid id number for the activity.")
+    except ValueError:
+        print("Error: Please enter a valid integer id number for the activity.")
 
 
 def add_new_activity():
@@ -132,8 +139,8 @@ def add_new_activity():
 
 
 def update_rating_review_activity():
-    id = input("Enter the activity id:")
-    if activity := UserActivity.findby_id(id):
+    activity_id = input("Enter the activity id:")
+    if activity := UserActivity.findby_id(activity_id):
         try:
             review = input("Enter the Review: ")
             activity.review = review
@@ -147,7 +154,7 @@ def update_rating_review_activity():
         except Exception as exc:
             print("Error updating rating and review: ", exc)
     else:
-        print(f"Activity {id} not found")
+        print(f"Activity {activity_id} not found")
 
 
 # def print_rating(self):

@@ -44,7 +44,7 @@ def main():
                         elif choice_sub_2 == "3":
                             find_activity_by_rating()
                         elif choice_sub_2 == "4":
-                            save_to_activities(user) # Working on this
+                            save_to_activities(user) # Why can input zero?
                         elif choice_sub_2 == "5":
                             add_new_activity() # Needs to be created
                         elif choice_sub_2 == "6":
@@ -55,7 +55,7 @@ def main():
                 elif choice_sub_1 == "2":
                     view_saved_activities(user)
                 elif choice_sub_1 == "3":
-                    delete_user()  # Need confirmation message
+                    delete_user()
                 else:
                     print("Invalid choice")
             # END OF SUB MENU 1

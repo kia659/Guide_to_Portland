@@ -40,9 +40,9 @@ class UserActivity(Helper):
 
     @rating.setter
     def rating(self, rating):
-        if not isinstance(rating, int):
+        if rating is not None and not isinstance(rating, int):
             raise TypeError("Rating must be a number.")
-        elif not 1 <= rating <= 5:
+        elif rating is not None and not 1 <= rating <= 5:
             raise ValueError("Rating must be between 1 (lowest) and 5 (Highest).")
         else:
             self._rating = rating
@@ -169,13 +169,9 @@ class UserActivity(Helper):
 
     @classmethod
     def create(cls, user_id, activity_id, saved_at, review=None, rating=None):
-        try:
-            new_user_activity = cls(user_id, activity_id, saved_at, review, rating)
-            new_user_activity.save()
-            return new_user_activity
-        except Exception as e:
-            print(f"Error saving activity: {e}")
-            return None
+        new_user_activity = cls(user_id, activity_id, saved_at, review, rating)
+        new_user_activity.save()
+        return new_user_activity
 
     def activity(self):
         return Activity.find_by_id(self.activity_id)

@@ -86,7 +86,7 @@ class Activity(Helper):
             raise ValueError("ZIP code must start with '97'.")
         self._address = value
 
-    # ask steph should we restrict changing the neighborhood :)
+
     @property
     def neighborhood(self):
         return self._neighborhood
@@ -108,24 +108,11 @@ class Activity(Helper):
 
     @website.setter
     def website(self, website):
-        # if website is not None:
-        #     if not isinstance(website, str):
-        #         raise TypeError("Website must be a string")
-        #     elif not (website.startswith("https://") or website.startswith("https://") or website.startswith("www.")):
-        #         raise ValueError("Website URL does not start with 'https://', or https://', or www.'")
+        if website is not None and not isinstance(website, str):
+            valid_schemes = ("http://", "https://", "www.", "")
+            if not any(website.startswith(scheme) for scheme in valid_schemes):
+                raise ValueError("Website URL must start with 'http://', 'https://', 'www.', or be empty")
         self._website = website
-
-    # @website.setter
-    # def website(self, website):
-    #     if website is not None:
-    #         if not isinstance(website, str):
-    #             raise TypeError("Website must be a string")
-            
-    #         # Check if the website starts with a valid scheme
-    #         valid_schemes = ("http://", "https://", "www.")
-    #         if not any(website.startswith(scheme) for scheme in valid_schemes):
-    #             raise ValueError("Website URL must start with 'http://', 'https://', or 'www.'")
-    #     self._website = website
 
     @property
     def activity_type(self):
@@ -150,7 +137,6 @@ class Activity(Helper):
 
     def average_rating(self):
         ratings = self.user_ratings()
-        ipdb.set_trace()
         return sum(ratings) / len(ratings) or None
 
     @classmethod

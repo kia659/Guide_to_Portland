@@ -89,12 +89,13 @@ def find_activity_by_type():
     activity_type = input("Enter the activity type: ")
     activities = Activity.find_by_type(activity_type)
     if activities:
-        print(f"Activities of type '{activity_type}':")
+        print(f"Here are the '{activity_type}':")
         for activity in activities:
-            print(activity)
+            attrs = vars(activity)
+            for attr, value in attrs.items():
+                print(f"{attr}: {value}")
     else:
         print(f"No activities of type '{activity_type}' found.")
-    ipdb.set_trace()
 
 
 def find_activity_by_neighborhood():
@@ -106,7 +107,9 @@ def find_activity_by_neighborhood():
     if activities:
         print(f"Activities in '{neighborhood}':")
         for activity in activities:
-            print(activity)
+            attrs = vars(activity)
+            for attr, value in attrs.items():
+                print(f"{attr}: {value}")
     else:
         print(f"No activities found in '{neighborhood}'.")
 
@@ -117,7 +120,9 @@ def find_activity_by_rating():
     if activities:
         print(f"Activities with rating '{rating}':")
         for activity in activities:
-            print(activity)
+            attrs = vars(activity)
+            for attr, value in attrs.items():
+                print(f"{attr}: {value}")
     else:
         print(f"No activities with rating '{rating}' found.")
 
@@ -138,7 +143,21 @@ def save_to_activities(user):
 
 
 def add_new_activity():
-    pass
+    try:
+        name = input("Enter the name of the activity: ").strip()
+        description = input("Enter the description of the activity: ").strip()
+        activity_type = input("Enter the type of activity (choose from Free Experiences, Food Carts, Breweries & Bars, Shops, Paid Experiences, Restaurants): ").strip()
+        address = input("Enter the address of the activity: ").strip()
+        neighborhood = input("Enter the neighborhood of the activity: ").strip()
+        website = input("Enter the website of the activity (optional, press Enter to skip): ").strip()
+
+        new_activity = Activity.create(name, description, activity_type, address, neighborhood, website)
+        
+        print("New activity successfully added!")
+        return new_activity 
+    except Exception as e:
+        print(f"Error adding new activity: {e}")
+        return None
 
 
 def update_rating_review_activity():

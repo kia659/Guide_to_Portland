@@ -143,22 +143,19 @@ class UserActivity(Helper):
             print(f"Failed to add activity: {e}")
             return e
 
-    @classmethod
-    def get_all(cls):
-        try:
-            with CONN:
-                result = CURSOR.execute(f"SELECT * FROM {cls.pascal_to_camel_plural()}")
-                rows = result.fetchall()
-                return [cls.instance_from_db(row) for row in rows]
-        except Exception as e:
-            return e
+    # @classmethod
+    # def get_all(cls):
+    #     try:
+    #         with CONN:
+    #             result = CURSOR.execute(f"SELECT * FROM {cls.pascal_to_camel_plural()}")
+    #             rows = result.fetchall()
+    #             return [cls.instance_from_db(row) for row in rows]
+    #     except Exception as e:
+    #         return e
 
     @classmethod
     def instance_from_db(cls, row):
         user_activity = cls.all.get(row[0])
-        import ipdb
-
-        ipdb.set_trace()
         if user_activity:
             user_activity.user_id = row[1]
             user_activity.activity_id = row[2]
@@ -178,3 +175,6 @@ class UserActivity(Helper):
 
     def activity(self):
         return Activity.find_by_id(self.activity_id)
+
+    def rating_review(self):
+        return Activity.find_by_rating(self.rating)

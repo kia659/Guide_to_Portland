@@ -30,7 +30,7 @@ def main():
                 if choice_sub_1 == "0":
                     exit_program()
                 elif choice_sub_1 == "1":
-                    browse_all_activities()  # Showing objects
+                    browse_all_activities()
                     # START OF SUB MENU 2 - CREATED USERNAME
                     while True:
                         sub_menu_2()
@@ -38,16 +38,18 @@ def main():
                         if choice_sub_2 == "0":
                             exit_program()
                         elif choice_sub_2 == "1":
-                            find_activity_by_type()
+                            browse_all_activities()  
                         elif choice_sub_2 == "2":
-                            find_activity_by_neighborhood()
+                            find_activity_by_type()
                         elif choice_sub_2 == "3":
-                            find_activity_by_rating()
+                            find_activity_by_neighborhood()
                         elif choice_sub_2 == "4":
-                            save_to_activities(user) # Why can input zero?
+                            find_activity_by_rating()
                         elif choice_sub_2 == "5":
-                            add_new_activity() # Needs to be created
+                            save_to_activities(user) # Why can input zero?
                         elif choice_sub_2 == "6":
+                            add_new_activity() 
+                        elif choice_sub_2 == "7":
                             view_saved_activities(user)
                         else:
                             print("Invalid choice")
@@ -83,12 +85,13 @@ def sub_menu_1():
 def sub_menu_2():
     print("Please select an option:")
     print("0. Exit the program.")
-    print("1. Find activities by type.")
-    print("2. Find activities by neighborhood.")
-    print("3. Find by rating.")
-    print("4. Save to your activities.")
-    print("5. Add a new activity.")
-    print("6. View all saved activities.")
+    print("1. Browse activities in Portland.")
+    print("2. Find activities by type.")
+    print("3. Find activities by neighborhood.")
+    print("4. Find by rating.")
+    print("5. Save to your activities.")
+    print("6. Add a new activity.")
+    print("7. View all saved activities.")
 
 
 # # Clicked "View Saved Activities"

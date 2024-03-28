@@ -53,17 +53,14 @@ class Helper(ABC):
     def find_by_id(cls, id):
         try:
             CURSOR.execute(
-                """
+                f"""
                 SELECT * FROM {cls.pascal_to_camel_plural()}
                 WHERE id = ?;
                 """,
                 (id,),
             )
-            result = CURSOR.fetchone()
-            if result:
-                return cls(
-                    id=result["id"],
-                )
+            row = CURSOR.fetchone()
+            return cls.instance_from_db(row) if row else None
         except Exception as e:
             print(f"Error finding record by id: {e}")
         return None

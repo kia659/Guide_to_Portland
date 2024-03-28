@@ -195,21 +195,27 @@ class Activity(Helper):
             name, description, activity_type, address, neighborhood, website
         )
         new_activity.save()
-        return new_activity
+
+    @classmethod
+    def find_by_rating(cls, rating):
+        try:
+            return [
+                activity
+                for activity in cls.get_all()
+                if activity.get_rating() == rating
+            ]
+         
+        except Exception as e:
+            return e
 
     # Get all of the user activities for a specific activity
     def get_user_activities(self):
         from models.user_activity import UserActivity
         return [user_activity for user_activity in UserActivity.get_all() if user_activity.activity_id == self.id]
 
-    def get_users(self):
-        return [user_activity.user() for user_activity in self.get_user_activities()]
-
-
-
-    # Returns a list of the activities rated activities
-    def rated_activities(self):
-        ipdb.set_trace()
-        return [rating.rating_review() for rating in self.get_user_activities()]
-
     
+
+    def get_rating(self):
+        ratings = [user_activity.rating for user_activity in self.get_user_activities()]
+        return round(sum(ratings) / len(ratings)) if ratings else None
+

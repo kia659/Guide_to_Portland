@@ -11,7 +11,10 @@ from helpers import (
     find_activity_by_neighborhood,
     find_activity_by_rating,
     save_to_activities,
-    add_new_activity
+    add_new_activity,
+    update_rating_review_activity,
+    delete_user_activity,
+    clear_screen,
 )
 
 
@@ -30,6 +33,7 @@ def main():
                 if choice_sub_1 == "0":
                     exit_program()
                 elif choice_sub_1 == "1":
+                    clear_screen()
                     browse_all_activities()
                     # START OF SUB MENU 2 - CREATED USERNAME
                     while True:
@@ -38,7 +42,7 @@ def main():
                         if choice_sub_2 == "0":
                             exit_program()
                         elif choice_sub_2 == "1":
-                            browse_all_activities()  
+                            browse_all_activities()
                         elif choice_sub_2 == "2":
                             find_activity_by_type()
                         elif choice_sub_2 == "3":
@@ -46,16 +50,28 @@ def main():
                         elif choice_sub_2 == "4":
                             find_activity_by_rating()
                         elif choice_sub_2 == "5":
-                            save_to_activities(user) # Why can input zero?
+                            save_to_activities(user)  # Why can input zero?
                         elif choice_sub_2 == "6":
-                            add_new_activity() 
+                            add_new_activity()
                         elif choice_sub_2 == "7":
                             view_saved_activities(user)
-                        else:
-                            print("Invalid choice")
+                            while True:
+                                sub_menu_3()
+                                choice_sub_3 = input("> ")
+                                if choice_sub_3 == "0":
+                                    exit_program()
+                                elif choice_sub_3 == "1":
+                                    break
+                                elif choice_sub_3 == "2":
+                                    update_rating_review_activity()
+                                elif choice_sub_3 == "3":
+                                    delete_user_activity(user)
+                                else:
+                                    print("Invalid choice")
                     # END OF SUB MENU 2
                 elif choice_sub_1 == "2":
                     view_saved_activities(user)
+                    # START OF SUB MENU 3 -  Clicked "View Saved Activities"
                 elif choice_sub_1 == "3":
                     delete_user()
                 else:
@@ -94,14 +110,15 @@ def sub_menu_2():
     print("7. View all saved activities.")
 
 
-# # Clicked "View Saved Activities"
-# def sub_menu_3():
-#     print("Please select an option:")
-#     print("0. Exit the program.")
-#     print("1. View all saved activities.")
-#     print("2. Add rating & review to activity.")
-#     print("3. Delete activity from saved list.")
-#     print("4. Browse all activities.")
+# Clicked "View Saved Activities"
+def sub_menu_3():
+    print("Please select an option:")
+    print("0. Exit the program.")
+    print("1. go back to previous menu")
+    # ----????
+    print("2. Add rating & review to activity.")
+    print("3. Delete activity from saved list.")
+    print("4. Browse all activities.")
 
 
 if __name__ == "__main__":

@@ -178,8 +178,20 @@ class UserActivity(Helper):
 
     def rating_review(self):
         return Activity.find_by_rating(self.rating)
-    
 
-
-    def user(self):
-        return User.find_by_id(self.user_id)
+    @classmethod
+    def find_by_user_name_activity(cls, activity_id, user_id):
+        try:
+            with CONN:
+                query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE activity_id = ? AND user_id = ?"
+                result = CURSOR.execute(
+                    query,
+                    (
+                        activity_id,
+                        user_id,
+                    ),
+                )
+                row = result.fetchone()
+                return cls.instance_from_db(row) if row else None
+        except Exception as e:
+            return e

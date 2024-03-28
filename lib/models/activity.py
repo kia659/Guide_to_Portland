@@ -1,7 +1,6 @@
 from models.__init__ import CONN, CURSOR
 from models.helper import Helper
 
-# from models.user_activity import UserActivity
 import ipdb
 
 
@@ -205,24 +204,18 @@ class Activity(Helper):
                 for activity in cls.get_all()
                 if activity.get_rating() == rating
             ]
-            # with CONN:
-            #     query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE rating = ?"
-            #     result = CURSOR.execute(query, (rating,))
-            #     rows = result.fetchall()
-            #     return [cls.instance_from_db(row) for row in rows]
+         
         except Exception as e:
             return e
 
-    # list of joint object - the user has many user rated activites
+    # Get all of the user activities for a specific activity
     def get_user_activities(self):
         from models.user_activity import UserActivity
+        return [user_activity for user_activity in UserActivity.get_all() if user_activity.activity_id == self.id]
 
-        return [
-            user_activity
-            for user_activity in UserActivity.get_all()
-            if user_activity.activity_id == self.id
-        ]
+    
 
     def get_rating(self):
         ratings = [user_activity.rating for user_activity in self.get_user_activities()]
         return round(sum(ratings) / len(ratings)) if ratings else None
+

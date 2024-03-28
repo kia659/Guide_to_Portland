@@ -10,7 +10,7 @@ class UserActivity(Helper):
     all = {}
 
     def __init__(
-        self, user_id, activity_id, saved_at, review, rating, id_=None
+        self, user_id, activity_id, saved_at, review=None, rating=None, id_=None
     ):  # Figure out how the review/ratings will work. Should sit on Activity as well?
         self.id = id_
         self.user_id = user_id
@@ -27,9 +27,9 @@ class UserActivity(Helper):
 
     @review.setter
     def review(self, review):
-        if not isinstance(review, str):
+        if review is not None and not isinstance(review, str):
             raise TypeError("Review must be a string.")
-        elif not 3 <= len(review) <= 1000:
+        elif review is not None and not 3 <= len(review) <= 1000:
             raise ValueError("Review must be between 3 and 1000 characters long.")
         else:
             self._review = review
@@ -40,9 +40,9 @@ class UserActivity(Helper):
 
     @rating.setter
     def rating(self, rating):
-        if not isinstance(rating, int):
+        if rating is not None and not isinstance(rating, int):
             raise TypeError("Rating must be a number.")
-        elif not 1 <= rating <= 5:
+        elif rating is not None and not 1 <= rating <= 5:
             raise ValueError("Rating must be between 1 (lowest) and 5 (Highest).")
         else:
             self._rating = rating
@@ -156,9 +156,6 @@ class UserActivity(Helper):
     @classmethod
     def instance_from_db(cls, row):
         user_activity = cls.all.get(row[0])
-        import ipdb
-
-        ipdb.set_trace()
         if user_activity:
             user_activity.user_id = row[1]
             user_activity.activity_id = row[2]
@@ -171,7 +168,7 @@ class UserActivity(Helper):
         return user_activity
 
     @classmethod
-    def create(cls, user_id, activity_id, saved_at, review, rating):
+    def create(cls, user_id, activity_id, saved_at, review=None, rating=None):
         new_user_activity = cls(user_id, activity_id, saved_at, review, rating)
         new_user_activity.save()
         return new_user_activity

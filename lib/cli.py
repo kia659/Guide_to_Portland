@@ -18,6 +18,7 @@ from helpers import (
     clear_screen,
 )
 
+
 custom_theme = Theme({
     "heading": "bright_white",
     "table_head": "bright_white",
@@ -26,6 +27,7 @@ custom_theme = Theme({
     # "table": "on blue1"
 })
 console = Console(theme=custom_theme)
+
 
 def main():
     while True:
@@ -62,7 +64,7 @@ def main():
                             clear_screen()
                             find_activity_by_rating()
                         elif choice_sub_2 == "5":
-                            save_to_activities(user)  
+                            save_to_activities(user)
                         elif choice_sub_2 == "6":
                             add_new_activity()
                         elif choice_sub_2 == "7":
@@ -111,7 +113,9 @@ def main():
 
 # Starting program
 def main_menu():
-    console.print("To get started, please login or create a username: ", style="subhead")
+    console.print(
+        "To get started, please login or create a username: ", style="subhead"
+    )
     print("0. Exit the program.")
     print("1. Create or login with username.")
 

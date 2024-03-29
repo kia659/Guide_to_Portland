@@ -6,10 +6,10 @@ from rich.table import Table
 import ipdb
 from datetime import datetime
 
-import ipdb
 from models.activity import Activity
 from models.user import User
 from models.user_activity import UserActivity
+
 
 custom_theme = Theme({
     "heading": "bright_white",
@@ -18,6 +18,7 @@ custom_theme = Theme({
     # "tile": "bold gold3 on blue1",
     # "table": "on blue1"
 })
+
 console = Console(theme=custom_theme)
 
 EXIT_WORDS = ["0", "exit", "quit"]
@@ -83,11 +84,12 @@ def browse_all_activities():
     table.add_column("Address", style="table_head")
     table.add_column("Neighborhood", style="table_head")
     table.add_column("Website", style="table_head")
-    
+
     activities = Activity.get_all()
     for activity in activities:
         table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
     console.print(table) 
+
 
 
 def view_saved_activities(user):
@@ -185,9 +187,9 @@ def find_activity_by_neighborhood():
     table.add_column("Neighborhood", style="table_head")
     table.add_column("Website", style="table_head")
     print(
-        "Examples of neighborhoods in Portland: Pearl District, Hawthorne, Alberta, Division, Clinton, Mississippi, St. Johns, Arlington Heights"
+        "Examples of neighborhoods in Portland: Pearl District, Hawthorne, East Portland , Division, Arlington Heights"
     )
-    neighborhood = input("Enter the neighborhood: ")
+    neighborhood = input("Enter the neighborhood: ").lower()
     activities = Activity.find_by_neighborhood(neighborhood)
     if activities:
         print(f"Activities in '{neighborhood}':")

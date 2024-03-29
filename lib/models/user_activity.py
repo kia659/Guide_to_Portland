@@ -5,21 +5,17 @@ from models.activity import Activity
 
 
 class UserActivity(Helper):
-
-    # Dictionary of objects saved to the database.
     all = {}
 
     def __init__(
         self, user_id, activity_id, saved_at, review=None, rating=None, id_=None
-    ):  # Figure out how the review/ratings will work. Should sit on Activity as well?
+    ):
         self.id = id_
         self.user_id = user_id
         self.activity_id = activity_id
         self.saved_at = saved_at
         self.review = review
         self.rating = rating
-
-    # Double check that there should be no properties for: user_id, activity_id, saved_at
 
     @property
     def review(self):
@@ -107,7 +103,6 @@ class UserActivity(Helper):
             print(f"Failed to update activity rating and review: {e}")
             return e
 
-    #  NEED TO SEE IF THIS ONLY DELETES ONE ACTIVITY?
     def delete(self):
         try:
             with CONN:
@@ -143,15 +138,22 @@ class UserActivity(Helper):
             print(f"Failed to add activity: {e}")
             return e
 
-    # @classmethod
-    # def get_all(cls):
-    #     try:
-    #         with CONN:
-    #             result = CURSOR.execute(f"SELECT * FROM {cls.pascal_to_camel_plural()}")
-    #             rows = result.fetchall()
-    #             return [cls.instance_from_db(row) for row in rows]
-    #     except Exception as e:
-    #         return e
+    @classmethod
+    def find_by_user_name_activity(cls, activity_id, user_id):
+        try:
+            with CONN:
+                query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE activity_id = ? AND user_id = ?"
+                result = CURSOR.execute(
+                    query,
+                    (
+                        activity_id,
+                        user_id,
+                    ),
+                )
+                row = result.fetchone()
+                return cls.instance_from_db(row) if row else None
+        except Exception as e:
+            return e
 
     @classmethod
     def instance_from_db(cls, row):
@@ -178,20 +180,3 @@ class UserActivity(Helper):
 
     def rating_review(self):
         return Activity.find_by_rating(self.rating)
-
-    @classmethod
-    def find_by_user_name_activity(cls, activity_id, user_id):
-        try:
-            with CONN:
-                query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE activity_id = ? AND user_id = ?"
-                result = CURSOR.execute(
-                    query,
-                    (
-                        activity_id,
-                        user_id,
-                    ),
-                )
-                row = result.fetchone()
-                return cls.instance_from_db(row) if row else None
-        except Exception as e:
-            return e

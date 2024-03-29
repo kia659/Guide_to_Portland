@@ -1,5 +1,6 @@
 # lib/cli.py
-
+from rich.console import Console
+from rich.console import Theme
 from helpers import (
     welcome,
     exit_program,
@@ -17,6 +18,14 @@ from helpers import (
     clear_screen,
 )
 
+custom_theme = Theme({
+    "heading": "bold bright_white",
+    "table_head": "bold bright_white on blue1",
+    "subhead": "turquoise2",
+    "tile": "bold gold3 on blue1",
+    "table": "on blue1"
+})
+console = Console(theme=custom_theme)
 
 def main():
     while True:
@@ -102,14 +111,14 @@ def main():
 
 # Starting program
 def main_menu():
-    print("To get started, please login or create a username:")
+    console.print("To get started, please login or create a username: ", style="subhead")
     print("0. Exit the program.")
     print("1. Create or login with username.")
 
 
 # After create username
 def sub_menu_1():
-    print("Please select an option:")
+    console.print("Please select an option:", style="subhead")
     print("0. Exit the program.")
     print("1. Browse activities in Portland.")
     print("2. View all saved activities.")
@@ -118,7 +127,7 @@ def sub_menu_1():
 
 # Clicked "Browse Activities"
 def sub_menu_2():
-    print("Please select an option:")
+    console.print("Please select an option:", style="subhead")
     print("0. Exit the program.")
     print("1. Browse all activities.")
     print("2. Find activities by type.")
@@ -131,9 +140,9 @@ def sub_menu_2():
 
 # Clicked "View Saved Activities"
 def sub_menu_3():
-    print("Please select an option:")
+    console.print("Please select an option:", style="subhead")
     print("0. Exit the program.")
-    print("1. go back to previous menu")
+    print("1. Return to previous menu.")
     print("2. Add rating & review to activity.")
     print("3. Delete activity from saved list.")
     print("4. Browse all activities.")

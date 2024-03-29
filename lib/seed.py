@@ -1,9 +1,10 @@
 import csv
 import sqlite3
-from models.activity import Activity
-import ipdb
-from random import sample
 from datetime import datetime
+from random import sample
+
+import ipdb
+from models.activity import Activity
 from models.user import User
 from models.user_activity import UserActivity
 
@@ -48,12 +49,7 @@ class SeedDatabase:
                 2,
             )
             kia_activity.save()
-<<<<<<<<< Temporary merge branch 1
-            ipdb.set_trace()
-            
-=========
 
->>>>>>>>> Temporary merge branch 2
             steph = User.create("steph")
             steph_activity = UserActivity(
                 steph.id, sample(activities, 1)[0].id, datetime.now(), "So fun!", 5

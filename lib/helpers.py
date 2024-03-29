@@ -1,15 +1,16 @@
 # lib/helpers.py
 
-from models.user import User
-from models.activity import Activity
-from models.user_activity import UserActivity
-from datetime import datetime
 import os
 from rich.console import Console
 from rich.console import Theme
 from rich.table import Table
 import ipdb
+from datetime import datetime
 
+import ipdb
+from models.activity import Activity
+from models.user import User
+from models.user_activity import UserActivity
 
 custom_theme = Theme({
     "heading": "bright_white",
@@ -51,6 +52,7 @@ def clear_screen():
 
 # MAIN MENU
 
+
 def find_or_create_username():
     while True:  # Loop until a valid username is provided or the user chooses to exit
         user_name = input("Enter your username: ").strip()
@@ -72,7 +74,9 @@ def find_or_create_username():
             print(f"Welcome back, {user_name}!")
             return user  # Exit the loop and return the existing user object
 
+
 # SUB MENU 1
+
 
 def browse_all_activities():
     table = Table(title="Portland Activities", border_style="black", show_lines=True)
@@ -112,7 +116,7 @@ def delete_user(user):
 
     found_user = User.find_by_name(user.user_name)
 
-    if confirmation == 'delete':
+    if confirmation == "delete":
         if found_user:
             found_user.delete()
             print(f"You have successfully deleted username: {user.user_name}")
@@ -135,6 +139,7 @@ def delete_user(user):
 
 # SUB MENU 2
 
+
 def find_activity_by_type():
     activity_types = [
         "Free Experiences",
@@ -142,16 +147,18 @@ def find_activity_by_type():
         "Breweries & Bars",
         "Shops",
         "Paid Experiences",
-        "Restaurants"
+        "Restaurants",
     ]
-    
+
     print("Activity type options:")
     for i, activity_type in enumerate(activity_types, start=1):
         print(f"{i}. {activity_type}")
-    
+
     while True:  # Loop until a valid username is provided or the user chooses to exit
         try:
-            choice = int(input("Enter the number for the type of activity you'd like to see: "))
+            choice = int(
+                input("Enter the number for the type of activity you'd like to see: ")
+            )
 
             # if choice in EXIT_WORDS:
             #     exit_program()
@@ -165,14 +172,17 @@ def find_activity_by_type():
                         attrs = vars(activity)
                         for attr, value in attrs.items():
                             print(f"{attr}: {value}")
-                    return choice # Exit loop after displaying activities
+                    return choice  # Exit loop after displaying activities
                 else:
                     print(f"No activities of type '{selected_activity_type}' found.")
             else:
-                print("Invalid choice. Please enter a number corresponding to an activity type.")
+                print(
+                    "Invalid choice. Please enter a number corresponding to an activity type."
+                )
                 # return choice # Exit loop if no activities found
         except ValueError:
             print("Invalid input. Please enter a number.")
+
 
 def find_activity_by_neighborhood():
     print(
@@ -205,14 +215,16 @@ def find_activity_by_rating():
 
 def save_to_activities(user):
     try:
-        saved_activity_id = int(input("Enter the id # for the activity you would like to save: "))
+        saved_activity_id = int(
+            input("Enter the id # for the activity you would like to save: ")
+        )
         activity = Activity.find_by_id(saved_activity_id)
         if activity:
             if activity not in user.get_saved_activities():
                 UserActivity.create(user.id, saved_activity_id, datetime.now())
                 print("Activity has been saved!")
             else:
-                print("You've already saved this activity.") 
+                print("You've already saved this activity.")
         else:
             print("Error: Please choose a valid id number for the activity.")
     except ValueError:
@@ -220,43 +232,128 @@ def save_to_activities(user):
 
 
 def add_new_activity():
-    try:
-        name = input("Enter the name of the activity: ").strip()
-        description = input("Enter the description of the activity: ").strip()
-        activity_type = input(
-            "Enter the type of activity (choose from Free Experiences, Food Carts, Breweries & Bars, Shops, Paid Experiences, Restaurants): "
-        ).strip()
-        address = input("Enter the address of the activity: ").strip()
-        neighborhood = input("Enter the neighborhood of the activity: ").strip()
-        website = input(
-            "Enter the website of the activity (optional, press Enter to skip): "
-        ).strip()
+    while True:
+        try:
+            name = input("Enter the name of the activity: ").strip()
+            if not name:
+                print("Error: Name must be a string with at least one character.")
+                continue
+            while True:
+                description = input("Enter the description of the activity: ").strip()
+                if not description:
+                    print(
+                        "Error: Description must be a string with at least one character."
+                    )
+                    continue
+                while True:
+                    print("Activity types:")
+                    print("1. Free Experiences")
+                    print("2. Food Carts")
+                    print("3. Breweries & Bars")
+                    print("4. Shops")
+                    print("5. Paid Experiences")
+                    print("6. Restaurants")
 
-        new_activity = Activity.create(
-            name, description, activity_type, address, neighborhood, website
-        )
+                    activity_type_option = input(
+                        "Choose the activity type (enter the corresponding number): "
+                    ).strip()
+                    if not activity_type_option.isdigit():
+                        print("Error: Invalid input. Please enter a number.")
+                        continue
+                    activity_type_option = int(activity_type_option)
+                    if activity_type_option not in range(1, 7):
+                        print("Error: Invalid activity type option.")
+                        continue
+                    activity_types = [
+                        "Free Experiences",
+                        "Food Carts",
+                        "Breweries & Bars",
+                        "Shops",
+                        "Paid Experiences",
+                        "Restaurants",
+                    ]
+                    activity_type = activity_types[activity_type_option - 1]
+                    while True:
+                        address = input("Enter the address of the activity: ").strip()
 
-        print("New activity successfully added!")
-        return new_activity
-    except Exception as e:
-        print(f"Error adding new activity: {e}")
-        return None
+                        components = address.split(" ")
+
+                        # Check if address is too short or missing components
+                        if len(components) < 5:
+                            print(
+                                "Error: Address is too short, seems to be missing components."
+                            )
+                            continue
+
+                        # Check if address is in Portland, OR
+                        if not (
+                            components[-3].lower() == "portland,"
+                            and components[-2].lower() == "or"
+                        ):
+                            print("Error: Address must be in Portland OR.")
+                            continue
+
+                        # Check if ZIP code starts with '97'
+                        zip_code = components[-1]
+                        if not zip_code.startswith("97"):
+                            print("Error: ZIP code must start with '97'.")
+                            continue
+                        while True:
+                            neighborhood = input(
+                                "Enter the neighborhood of the activity: "
+                            ).strip()
+                            if len(neighborhood) < 5 or len(neighborhood) > 30:
+                                print(
+                                    "Error: Neighborhood must be between 5 and 30 characters."
+                                )
+                                continue
+                            while True:
+                                website = input(
+                                    "Enter the website of the activity (optional, press Enter to skip). Website URL must start with 'http://', 'https://', 'www.': "
+                                ).strip()
+                                break
+                            # All inputs are valid, create the new activity
+                            new_activity = Activity.create(
+                                name,
+                                description,
+                                activity_type,
+                                address,
+                                neighborhood,
+                                website,
+                            )
+                            print("New activity successfully added!")
+                            return new_activity
+        except Exception as e:
+            print(f"Error adding new activity: {e}")
+            return None
+
 
 # SUB MENU 3
 
-def update_rating_review_activity():
-    activity_id = input("Enter the activity id:")
-    if activity := UserActivity.findby_id(activity_id):
-        try:
-            review = input("Enter the Review: ")
-            activity.review = review
-            rating = input(
-                "Enter the rating, must be between 1 (lowest) and 5 (Highest) : "
-            )
-            activity.rating = rating
 
-            activity.update_rating_and_review()
-            print(f"Success: {activity}")
+def update_rating_review_activity(user):
+    activity_id = int(input("Enter the activity id:"))
+    activity = UserActivity.find_by_user_name_activity(activity_id, user.id)
+    if activity:
+        try:
+            new_rating = int(
+                input(
+                    "Enter the rating, must be between 1 (lowest) and 5 (Highest) : "
+                ).strip()
+            )
+            if not 1 <= new_rating <= 5:
+                raise ValueError(
+                    "Rating must be a valid integer between 1 (lowest) and 5 (Highest)."
+                )
+
+            new_review = input("Enter the Review: ").strip()
+            if not isinstance(new_review, str) or len(new_review) < 4:
+                raise ValueError(
+                    "Review must be a string with a minimum of 4 characters."
+                )
+
+            activity.update_rating_and_review(new_review, new_rating)
+            print(f"Success: activity id {activity_id} has been updated")
         except Exception as exc:
             print("Error updating rating and review: ", exc)
     else:
@@ -272,4 +369,3 @@ def delete_user_activity(user):
         print(f"You have successfully deleted activity: {deleted_id}")
     else:
         print(f"Could not find {deleted_id}.")
-

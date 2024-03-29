@@ -148,6 +148,30 @@ class Activity(Helper):
         except Exception as e:
             return e
 
+    # def save(self):
+    #     try:
+
+    #         with CONN:
+    #             CURSOR.execute(
+    #                 f"""
+    #                     INSERT INTO {type(self).pascal_to_camel_plural()}
+    #                     (name, description, activity_type, address, neighborhood, website)
+    #                     VALUES
+    #                     (?, ?, ?, ?, ?, ?);
+    #                 """,
+    #                 (
+    #                     self.name,
+    #                     self.description,
+    #                     self.activity_type,
+    #                     self.address,
+    #                     self.neighborhood,
+    #                     self.website,
+    #                 ),
+    #             )
+    #         self.id = CURSOR.lastrowid
+    #     except Exception as e:
+    #         return e
+
     def save(self):
         try:
 
@@ -169,6 +193,7 @@ class Activity(Helper):
                     ),
                 )
             self.id = CURSOR.lastrowid
+            return self
         except Exception as e:
             return e
 
@@ -187,6 +212,15 @@ class Activity(Helper):
             cls.all[activity.id] = activity
         return activity
 
+    # @classmethod
+    # def create(
+    #     cls, name, description, activity_type, address, neighborhood, website=None
+    # ):
+    #     new_activity = cls(
+    #         name, description, activity_type, address, neighborhood, website
+    #     )
+    #     new_activity.save()
+
     @classmethod
     def create(
         cls, name, description, activity_type, address, neighborhood, website=None
@@ -195,6 +229,7 @@ class Activity(Helper):
             name, description, activity_type, address, neighborhood, website
         )
         new_activity.save()
+        return new_activity
 
     @classmethod
     def find_by_rating(cls, rating):

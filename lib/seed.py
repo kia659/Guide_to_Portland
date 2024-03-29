@@ -35,8 +35,8 @@ class SeedDatabase:
             activities = []
             for index, row in enumerate(reader):
                 values = row.values()
-                a = Activity.create(*values)
-                activities.append(a)
+                activity = Activity.create(*values)
+                activities.append(activity)
 
             kia = User.create("kia")
             ipdb.set_trace()

@@ -10,13 +10,15 @@ from models.user import User
 from models.user_activity import UserActivity
 
 
-custom_theme = Theme({
-    "heading": "bright_white",
-    "table_head": "bright_white", #color of text in the table rows, except for 1st line
-    "subhead": "bright_white",
-    # "tile": "bold gold3 on blue1",
-    # "table": "on blue1"
-})
+custom_theme = Theme(
+    {
+        "heading": "bright_white",
+        "table_head": "bright_white",  # color of text in the table rows, except for 1st line
+        "subhead": "bright_white",
+        # "tile": "bold gold3 on blue1",
+        # "table": "on blue1"
+    }
+)
 
 console = Console(theme=custom_theme)
 
@@ -51,6 +53,7 @@ def clear_screen():
 
 # MAIN MENU
 
+
 def find_or_create_username():
     while True:  # Loop until a valid username is provided or the user chooses to exit
         user_name = input("Enter your username: ").strip()
@@ -75,6 +78,7 @@ def find_or_create_username():
 
 # SUB MENU 1
 
+
 def browse_all_activities():
     table = Table(title="Portland Activities", border_style="black", show_lines=True)
     table.add_column("Name", style="table_head")
@@ -86,9 +90,15 @@ def browse_all_activities():
 
     activities = Activity.get_all()
     for activity in activities:
-        table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
-    console.print(table) 
-
+        table.add_row(
+            activity.name,
+            activity.description,
+            activity.activity_type,
+            activity.address,
+            activity.neighborhood,
+            activity.website,
+        )
+    console.print(table)
 
 
 def view_saved_activities(user):
@@ -99,12 +109,19 @@ def view_saved_activities(user):
     table.add_column("Address", style="table_head")
     table.add_column("Neighborhood", style="table_head")
     table.add_column("Website", style="table_head")
-    
+
     saved_activities = user.get_saved_activities()
     if saved_activities:
         print("Saved Activities:")
         for activity in saved_activities:
-            table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
+            table.add_row(
+                activity.name,
+                activity.description,
+                activity.activity_type,
+                activity.address,
+                activity.neighborhood,
+                activity.website,
+            )
         console.print(table)
     else:
         print("No saved activities found.")
@@ -128,6 +145,7 @@ def delete_user(user):
 
 # SUB MENU 2
 
+
 def find_activity_by_type():
     table = Table(title="Portland Activities", border_style="black", show_lines=True)
     table.add_column("Name", style="table_head")
@@ -136,7 +154,7 @@ def find_activity_by_type():
     table.add_column("Address", style="table_head")
     table.add_column("Neighborhood", style="table_head")
     table.add_column("Website", style="table_head")
-    
+
     activity_types = [
         "Free Experiences",
         "Food Carts",
@@ -152,7 +170,9 @@ def find_activity_by_type():
 
     while True:  # Loop until a valid username is provided or the user chooses to exit
         try:
-            choice = int(input("Enter the number for the type of activity you'd like to see: "))
+            choice = int(
+                input("Enter the number for the type of activity you'd like to see: ")
+            )
 
             if 1 <= choice <= len(activity_types):
                 selected_activity_type = activity_types[choice - 1]
@@ -160,7 +180,14 @@ def find_activity_by_type():
                 if activities:
                     print(f"Here are the '{selected_activity_type}':")
                     for activity in activities:
-                        table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
+                        table.add_row(
+                            activity.name,
+                            activity.description,
+                            activity.activity_type,
+                            activity.address,
+                            activity.neighborhood,
+                            activity.website,
+                        )
                     console.print(table)
                     return choice  # Exit loop after displaying activities
                 else:
@@ -183,15 +210,16 @@ def find_activity_by_neighborhood():
     table.add_column("Neighborhood", style="table_head")
     table.add_column("Website", style="table_head")
     print(
-        "Examples of neighborhoods in Portland: Pearl District, Hawthorne, East Portland , Division, Arlington Heights"
+        "Examples of neighborhoods in Portland: Hawthorne, Northwest District, Buckman, Clinton, Pearl District, Arlington Heights"
     )
-    neighborhood = input("Enter the neighborhood: ").lower()
+    neighborhood = input("Enter the neighborhood: ")
     activities = Activity.find_by_neighborhood(neighborhood)
     if activities:
         print(f"Activities in '{neighborhood}':")
         for activity in activities:
-            table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
-        console.print(table)
+            attrs = vars(activity)
+            for attr, value in attrs.items():
+                print(f"{attr}: {value}")
     else:
         print(f"No activities found in '{neighborhood}'.")
 
@@ -210,7 +238,14 @@ def find_activity_by_rating():
     if activities:
         print(f"Activities with rating '{rating}':")
         for activity in activities:
-            table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
+            table.add_row(
+                activity.name,
+                activity.description,
+                activity.activity_type,
+                activity.address,
+                activity.neighborhood,
+                activity.website,
+            )
         console.print(table)
     else:
         print(f"No activities with rating '{rating}' found.")
@@ -278,32 +313,25 @@ def add_new_activity():
                     activity_type = activity_types[activity_type_option - 1]
                     while True:
                         address = input("Enter the address of the activity: ").strip()
-
                         components = address.split(" ")
-
-                        # Check if address is too short or missing components
                         if len(components) < 5:
                             print(
                                 "Error: Address is too short, seems to be missing components."
                             )
                             continue
-
-                        # Check if address is in Portland, OR
                         if not (
                             components[-3].lower() == "portland,"
                             and components[-2].lower() == "or"
                         ):
-                            print("Error: Address must be in Portland OR.")
+                            print("Error: Address must be in Portland, OR.")
                             continue
-
-                        # Check if ZIP code starts with '97'
                         zip_code = components[-1]
                         if not zip_code.startswith("97"):
                             print("Error: ZIP code must start with '97'.")
                             continue
                         while True:
                             neighborhood = input(
-                                "Enter the neighborhood of the activity: "
+                                "Enter the neighborhood of the activity. Examples of neighborhoods in Portland: Hawthorne, Northwest District, Pearl District, Clinton: "
                             ).strip()
                             if len(neighborhood) < 5 or len(neighborhood) > 30:
                                 print(
@@ -315,7 +343,6 @@ def add_new_activity():
                                     "Enter the website of the activity (optional, press Enter to skip). Website URL must start with 'http://', 'https://', 'www.': "
                                 ).strip()
                                 break
-                            # All inputs are valid, create the new activity
                             new_activity = Activity.create(
                                 name,
                                 description,
@@ -332,6 +359,7 @@ def add_new_activity():
 
 
 # SUB MENU 3
+
 
 def update_rating_review_activity(user):
     activity_id = int(input("Enter the activity id:"))

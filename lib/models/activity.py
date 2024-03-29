@@ -2,8 +2,6 @@ from models.__init__ import CONN, CURSOR
 from models.helper import Helper
 
 
-
-
 class Activity(Helper):
 
     all = {}
@@ -106,7 +104,7 @@ class Activity(Helper):
                 "Neighborhood must be at least 5 character and no more than 30"
             )
         else:
-            self._neighborhood = value
+            self._neighborhood = value.lower()
 
     @property
     def website(self):

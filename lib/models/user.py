@@ -2,13 +2,7 @@ from models.__init__ import CURSOR, CONN
 from models.helper import Helper
 
 
-
-# from models.user_activity import UserActivity
-
-
 class User(Helper):
-
-    # Dictionary of objects saved to the database.
     all = {}
 
     def __init__(self, user_name, id=None):

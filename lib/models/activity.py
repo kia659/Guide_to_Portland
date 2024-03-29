@@ -234,5 +234,5 @@ class Activity(Helper):
         ]
 
     def get_rating(self):
-        ratings = [user_activity.rating for user_activity in self.get_user_activities()]
+        ratings = [user_activity.rating for user_activity in self.get_user_activities() if user_activity.rating is not None and user_activity.rating != ""]
         return round(sum(ratings) / len(ratings)) if ratings else None

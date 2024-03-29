@@ -13,10 +13,8 @@ from models.user_activity import UserActivity
 custom_theme = Theme(
     {
         "heading": "green4",
-        "table_head": "bright_white",  # color of text in the table rows, except for 1st line
+        "table_head": "bright_white",  
         "subhead": "turquoise2",
-        # "tile": "bold gold3 on blue1",
-        # "table": "on blue1"
     }
 )
 
@@ -208,7 +206,6 @@ def find_activity_by_type():
         except ValueError:
             print("Invalid input. Please enter a number.")
 
-
 def find_activity_by_neighborhood():
     table = Table(title="Portland Activities", border_style="dark_magenta", show_lines=True)
     table.add_column("ID", style="table_head")
@@ -221,7 +218,7 @@ def find_activity_by_neighborhood():
     print(
         "Examples of neighborhoods in Portland: Hawthorne, Northwest District, Buckman, Clinton, Pearl District, Arlington Heights"
     )
-    neighborhood = input("Enter the neighborhood: ")
+    neighborhood = input("Enter the neighborhood: ").lower()
     activities = Activity.find_by_neighborhood(neighborhood)
     if activities:
         print(f"Activities in '{neighborhood}':")
@@ -239,7 +236,6 @@ def find_activity_by_neighborhood():
     else:
         print(f"No activities found in '{neighborhood}'.")
 
-
 def find_activity_by_rating():
     table = Table(title="Portland Activities", border_style="dark_magenta", show_lines=True)
     table.add_column("ID", style="table_head")
@@ -250,10 +246,18 @@ def find_activity_by_rating():
     table.add_column("Neighborhood", style="table_head")
     table.add_column("Website", style="table_head")
 
-    rating = int(input("Enter the rating 1 - 5: "))
+    while True:
+        try:
+            rating = int(input("Enter the rating (1 - 5): "))
+            if rating < 1 or rating > 5:
+                print("Invalid rating. Please enter a rating between 1 and 5.")
+                continue
+            else:
+                break
+        except ValueError:
+            print("Invalid input. Please enter a valid integer.")
     activities = Activity.find_by_rating(rating)
     if activities:
-        print(f"Activities with rating '{rating}':")
         for activity in activities:
             table.add_row(
                 str(activity.id),
@@ -290,6 +294,7 @@ def save_to_activities(user):
 def add_new_activity():
     while True:
         try:
+            print("To return to previous menu, use 'ctrl+D' at any time")
             name = input("Enter the name of the activity: ").strip()
             if not name:
                 print("Error: Name must be a string with at least one character.")

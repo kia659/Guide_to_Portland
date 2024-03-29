@@ -19,13 +19,15 @@ from helpers import (
 )
 
 
-custom_theme = Theme({
-    "heading": "bright_white",
-    "table_head": "bright_white",
-    "subhead": "bright_white",
-    # "tile": "bold gold3 on blue1",
-    # "table": "on blue1"
-})
+custom_theme = Theme(
+    {
+        "heading": "green4",
+        "table_head": "bright_white",  # color of text in the table rows, except for 1st line
+        "subhead": "turquoise2",
+        # "tile": "bold gold3 on blue1",
+        # "table": "on blue1"
+    }
+)
 console = Console(theme=custom_theme)
 
 
@@ -131,6 +133,7 @@ def sub_menu_1():
 
 # Clicked "Browse Activities"
 def sub_menu_2():
+    console.print("As you're exploring activities, follow along in our Portland activities [link=https://www.google.com/maps/d/u/0/edit?mid=1uJYSczGz5TFPJqRH8mIgsODtL3wi7PM&usp=sharing]Google map[/link]: ", style="heading")
     console.print("Please select an option:", style="subhead")
     print("0. Exit the program.")
     print("1. Browse all activities.")

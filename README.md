@@ -31,7 +31,7 @@ To get started with Guide to Portland, follow these steps:
     pipenv install
     ```
 
-4. Activate the virtual environment:
+
 
     
 ## Usage

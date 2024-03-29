@@ -3,7 +3,6 @@ import os
 from rich.console import Console
 from rich.console import Theme
 from rich.table import Table
-import ipdb
 from datetime import datetime
 
 from models.activity import Activity
@@ -38,7 +37,7 @@ def welcome():
           
           """
     )
-
+    print("Welcome to our insider's guide to Portland!")
 
 def exit_program():
     console.print("See ya! Hope you enjoy exploring Portland!", style="subhead")
@@ -190,9 +189,6 @@ def find_activity_by_type():
                             activity.website,
                         )
                     console.print(table)
-                    # attrs = vars(activity)
-                    # for attr, value in attrs.items():
-                    #     print(f"{attr}: {value}")
                     return choice  # Exit loop after displaying activities
                 else:
                     print(f"No activities of type '{selected_activity_type}' found.")

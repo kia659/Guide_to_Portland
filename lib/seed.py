@@ -48,12 +48,12 @@ class SeedDatabase:
                 2,
             )
             kia_activity.save()
-<<<<<<< HEAD
-
-=======
+<<<<<<<<< Temporary merge branch 1
             ipdb.set_trace()
             
->>>>>>> 1c78747d5e7e36343d40a357477c8e71e596e053
+=========
+
+>>>>>>>>> Temporary merge branch 2
             steph = User.create("steph")
             steph_activity = UserActivity(
                 steph.id, sample(activities, 1)[0].id, datetime.now(), "So fun!", 5

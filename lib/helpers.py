@@ -233,7 +233,7 @@ def add_new_activity():
                             print("Error: Address must be in Portland OR.")
                             continue
 
-                        # Check if ZIP code starts with '97'
+                        # Check if ZIP code starts with '97' for some reasong this error is not coming up! 
                         zip_code = components[-1]
                         if not zip_code.startswith("97"):
                             print("Error: ZIP code must start with '97'.")

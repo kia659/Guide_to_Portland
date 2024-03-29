@@ -68,6 +68,7 @@ def main():
                         elif choice_sub_2 == "5":
                             save_to_activities(user)
                         elif choice_sub_2 == "6":
+                            clear_screen()
                             add_new_activity()
                         elif choice_sub_2 == "7":
                             view_saved_activities(user)
@@ -83,6 +84,9 @@ def main():
                                     update_rating_review_activity(user)
                                 elif choice_sub_3 == "3":
                                     delete_user_activity(user)
+                                elif choice_sub_3 == "4":
+                                    clear_screen()
+                                    view_saved_activities(user)
                                 else:
                                     print("Invalid choice")
                     # END OF SUB MENU 2
@@ -100,6 +104,9 @@ def main():
                             update_rating_review_activity(user)
                         elif choice_sub_3 == "3":
                             delete_user_activity(user)
+                        elif choice_sub_3 == "4":
+                            clear_screen()
+                            view_saved_activities(user)
                         else:
                             print("Invalid choice")
                 elif choice_sub_1 == "3":
@@ -152,6 +159,7 @@ def sub_menu_3():
     print("1. Return to previous menu.")
     print("2. Add rating & review to activity.")
     print("3. Delete activity from saved list.")
+    print("4. View all saved activities.")
 
 
 if __name__ == "__main__":

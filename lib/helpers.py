@@ -1,12 +1,12 @@
 # lib/helpers.py
 
-from models.user import User
-from models.activity import Activity
-from models.user_activity import UserActivity
-from datetime import datetime
 import os
-import ipdb
+from datetime import datetime
 
+import ipdb
+from models.activity import Activity
+from models.user import User
+from models.user_activity import UserActivity
 
 EXIT_WORDS = ["0", "exit", "quit"]
 
@@ -82,15 +82,27 @@ def view_saved_activities(user):
         print("No saved activities found.")
 
 
-def delete_user():
-    user_name = input("Enter your username: ").strip()
+def delete_user(user):
+    # while True: # Loop until 'delete' is provided or the user chooses to exit
+    confirmation = input("Please type 'delete' to confirm user deletion: ").strip()
 
     user = User.find_by_name(user_name)
     if user:
         user.delete()
         print(f"You have successfully deleted username: {user_name}")
     else:
-        print(f"Could not find {user_name}.")
+        print(f"Deletion confirmation failed. Please try again.")
+
+
+# def delete_user():
+#     user_name = input("Enter your username to confirm deletion: ").strip()
+
+#     user = User.find_by_name(user_name)
+#     if user:
+#         user.delete()
+#         print(f"You have successfully deleted username: {user_name}")
+#     else:
+#         print(f"Could not find {user_name}.")
 
 
 # SUB MENU 2

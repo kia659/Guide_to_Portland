@@ -44,7 +44,7 @@ class Activity(Helper):
         if not isinstance(value, str):
             raise TypeError("names must be strings")
         elif not value:
-            raise AttributeError("names must be strings with at least one character")
+            raise AttributeError("names must be string with at least one character")
         self._name = value
 
     @property
@@ -204,18 +204,20 @@ class Activity(Helper):
                 for activity in cls.get_all()
                 if activity.get_rating() == rating
             ]
-         
+
         except Exception as e:
             return e
 
     # Get all of the user activities for a specific activity
     def get_user_activities(self):
         from models.user_activity import UserActivity
-        return [user_activity for user_activity in UserActivity.get_all() if user_activity.activity_id == self.id]
 
-    
+        return [
+            user_activity
+            for user_activity in UserActivity.get_all()
+            if user_activity.activity_id == self.id
+        ]
 
     def get_rating(self):
         ratings = [user_activity.rating for user_activity in self.get_user_activities()]
         return round(sum(ratings) / len(ratings)) if ratings else None
-

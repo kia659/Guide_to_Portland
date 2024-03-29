@@ -27,6 +27,7 @@ class UserActivity(Helper):
 
     @review.setter
     def review(self, review):
+        print("Value received in review setter:", review)
         if review is not None and not isinstance(review, str):
             raise TypeError("Review must be a string.")
         elif review is not None and not 3 <= len(review) <= 1000:
@@ -40,6 +41,7 @@ class UserActivity(Helper):
 
     @rating.setter
     def rating(self, rating):
+        print("Value received in rating setter:", rating)
         if rating is not None and not isinstance(rating, int):
             raise TypeError("Rating must be a number.")
         elif rating is not None and not 1 <= rating <= 5:
@@ -90,9 +92,9 @@ class UserActivity(Helper):
         except Exception as e:
             return e
 
-    def update_rating_and_review(self, new_rating, new_review):
-        self.rating = new_rating
+    def update_rating_and_review(self, new_review, new_rating):
         self.review = new_review
+        self.rating = new_rating
         try:
             with CONN:
                 CURSOR.execute(
@@ -101,7 +103,7 @@ class UserActivity(Helper):
                         SET review = ?, rating = ? 
                         WHERE user_id = ? AND activity_id = ?;
                     """,
-                    (self.rating, self.review, self.user_id, self.activity_id),
+                    (self.review, self.rating, self.user_id, self.activity_id),
                 )
         except Exception as e:
             print(f"Failed to update activity rating and review: {e}")

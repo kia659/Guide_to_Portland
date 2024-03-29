@@ -93,7 +93,7 @@ def main():
                         elif choice_sub_3 == "1":
                             break
                         elif choice_sub_3 == "2":
-                            update_rating_review_activity()
+                            update_rating_review_activity(user)
                         elif choice_sub_3 == "3":
                             delete_user_activity(user)
                         else:

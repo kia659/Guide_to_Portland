@@ -5,15 +5,27 @@ from models.activity import Activity
 from models.user_activity import UserActivity
 from datetime import datetime
 import os
+from rich.console import Console
+from rich.console import Theme
+from rich.table import Table
 import ipdb
 
+
+custom_theme = Theme({
+    "heading": "bright_white",
+    "table_head": "bright_white",
+    "subhead": "turquoise2",
+    # "tile": "bold gold3 on blue1",
+    # "table": "on blue1"
+})
+console = Console(theme=custom_theme)
 
 EXIT_WORDS = ["0", "exit", "quit"]
 
 
 def welcome():
     print(
-        """""
+        """
       _______  __    __   __   _______   _______    .___________.  ______      .______    _______  ___   ___
      /  _____||  |  |  | |  | |       \ |   ____|   |           | /  __  \     |   _  \  |       \ \  \ /  /
     |  |  __  |  |  |  | |  | |  .--.  ||  |__      `---|  |----`|  |  |  |    |  |_)  | |  .--.  | \  V  / 
@@ -26,7 +38,7 @@ def welcome():
 
 
 def exit_program():
-    print("See ya! Hope you enjoy exploring Portland!")
+    console.print("See ya! Hope you enjoy exploring Portland!", style="subhead")
     exit()
 
 
@@ -63,12 +75,24 @@ def find_or_create_username():
 # SUB MENU 1
 
 def browse_all_activities():
+    table = Table(title="Portland Activities", border_style="black", show_lines=True)
+    table.add_column("Name", style="table_head")
+    table.add_column("Description", style="table_head")
+    table.add_column("Activity Type", style="table_head")
+    table.add_column("Address", style="table_head")
+    table.add_column("Neighborhood", style="table_head")
+    table.add_column("Website", style="table_head")
+    
     activities = Activity.get_all()
     for activity in activities:
-        attrs = vars(activity)
-        for attr, value in attrs.items():
-            print(f"{attr}: {value}")
+        table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
+    
+    console.print(table)
 
+        # attrs = vars(activity)
+        # for attr, value in attrs.items():
+        #     print(f"{attr}: {value}")
+    
 
 def view_saved_activities(user):
     saved_activities = user.get_saved_activities()

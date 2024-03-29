@@ -1,7 +1,7 @@
 from models.__init__ import CONN, CURSOR
 import re
 from abc import ABC
-import ipdb
+
 
 
 class Helper(ABC):

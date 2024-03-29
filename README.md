@@ -31,9 +31,13 @@ To get started with Guide to Portland, follow these steps:
     pipenv install
     ```
 
+4. Seed the database:
+
+ ```bash
+    python lib/seed.py
+    ```
 
 
-    
 ## Usage
 
 Once the application is running, you can use the command-line interface (CLI) to navigate through the different activities, explore neighborhoods, leave reviews, and more. Follow the on-screen prompts to interact with the application.

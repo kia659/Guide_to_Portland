@@ -39,6 +39,7 @@ class SeedDatabase:
                 activities.append(a)
 
             kia = User.create("kia")
+            ipdb.set_trace()
             kia_activity = UserActivity(
                 kia.id,
                 sample(activities, 1)[0].id,

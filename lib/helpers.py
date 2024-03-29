@@ -1,12 +1,12 @@
 # lib/helpers.py
 
-from models.user import User
-from models.activity import Activity
-from models.user_activity import UserActivity
-from datetime import datetime
 import os
-import ipdb
+from datetime import datetime
 
+import ipdb
+from models.activity import Activity
+from models.user import User
+from models.user_activity import UserActivity
 
 EXIT_WORDS = ["0", "exit", "quit"]
 
@@ -62,6 +62,9 @@ def find_or_create_username():
             return user  # Exit the loop and return the existing user object
 
 
+# SUB MENU 1
+
+
 def browse_all_activities():
     activities = Activity.get_all()
     for activity in activities:
@@ -82,34 +85,78 @@ def view_saved_activities(user):
         print("No saved activities found.")
 
 
-def delete_user():
-    user_name = input("Enter your username: ").strip()
+def delete_user(user):
+    # while True: # Loop until 'delete' is provided or the user chooses to exit
+    confirmation = input("Please type 'delete' to confirm user deletion: ").strip()
 
-    user = User.find_by_name(user_name)
-    if user:
-        user.delete()
-        print(f"You have successfully deleted username: {user_name}")
+    found_user = User.find_by_name(user.user_name)
+
+    if confirmation == "delete":
+        if found_user:
+            found_user.delete()
+            print(f"You have successfully deleted username: {user.user_name}")
+        else:
+            print(f"Could not find {user.user_name}.")
     else:
-        print(f"Could not find {user_name}.")
+        print(f"Deletion confirmation failed. Please try again.")
+
+
+# def delete_user():
+#     user_name = input("Enter your username to confirm deletion: ").strip()
+
+#     user = User.find_by_name(user_name)
+#     if user:
+#         user.delete()
+#         print(f"You have successfully deleted username: {user_name}")
+#     else:
+#         print(f"Could not find {user_name}.")
 
 
 # SUB MENU 2
 
 
 def find_activity_by_type():
-    print(
-        "Activity type options: Free Experiences, Food Carts, Breweries & Bars, Shops, Paid Experiences, Restaurants"
-    )
-    activity_type = input("Enter the activity type: ")
-    activities = Activity.find_by_type(activity_type)
-    if activities:
-        print(f"Here are the '{activity_type}':")
-        for activity in activities:
-            attrs = vars(activity)
-            for attr, value in attrs.items():
-                print(f"{attr}: {value}")
-    else:
-        print(f"No activities of type '{activity_type}' found.")
+    activity_types = [
+        "Free Experiences",
+        "Food Carts",
+        "Breweries & Bars",
+        "Shops",
+        "Paid Experiences",
+        "Restaurants",
+    ]
+
+    print("Activity type options:")
+    for i, activity_type in enumerate(activity_types, start=1):
+        print(f"{i}. {activity_type}")
+
+    while True:  # Loop until a valid username is provided or the user chooses to exit
+        try:
+            choice = int(
+                input("Enter the number for the type of activity you'd like to see: ")
+            )
+
+            # if choice in EXIT_WORDS:
+            #     exit_program()
+
+            if 1 <= choice <= len(activity_types):
+                selected_activity_type = activity_types[choice - 1]
+                activities = Activity.find_by_type(selected_activity_type)
+                if activities:
+                    print(f"Here are the '{selected_activity_type}':")
+                    for activity in activities:
+                        attrs = vars(activity)
+                        for attr, value in attrs.items():
+                            print(f"{attr}: {value}")
+                    return choice  # Exit loop after displaying activities
+                else:
+                    print(f"No activities of type '{selected_activity_type}' found.")
+            else:
+                print(
+                    "Invalid choice. Please enter a number corresponding to an activity type."
+                )
+                # return choice # Exit loop if no activities found
+        except ValueError:
+            print("Invalid input. Please enter a number.")
 
 
 def find_activity_by_neighborhood():
@@ -254,6 +301,9 @@ def add_new_activity():
         except Exception as e:
             print(f"Error adding new activity: {e}")
             return None
+
+
+# SUB MENU 3
 
 
 def update_rating_review_activity(user):

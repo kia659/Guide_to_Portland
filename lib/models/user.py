@@ -1,6 +1,7 @@
 from models.__init__ import CURSOR, CONN
 from models.helper import Helper
-import ipdb
+
+
 
 # from models.user_activity import UserActivity
 
@@ -24,7 +25,7 @@ class User(Helper):
             raise TypeError("Username must be a string.")
         elif not 3 <= len(user_name) <= 40:
             raise ValueError("Username must be between 3 and 40 characters long.")
-            ipdb.set_trace()
+        
         else:
             self._user_name = user_name
 

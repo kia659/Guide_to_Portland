@@ -1,5 +1,4 @@
 # lib/helpers.py
-
 import os
 from rich.console import Console
 from rich.console import Theme
@@ -11,15 +10,15 @@ from models.activity import Activity
 from models.user import User
 from models.user_activity import UserActivity
 
-custom_theme = Theme(
-    {
-        "heading": "bright_white",
-        "table_head": "bright_white",
-        "subhead": "turquoise2",
-        # "tile": "bold gold3 on blue1",
-        # "table": "on blue1"
-    }
-)
+
+custom_theme = Theme({
+    "heading": "bright_white",
+    "table_head": "bright_white", #color of text in the table rows, except for 1st line
+    "subhead": "bright_white",
+    # "tile": "bold gold3 on blue1",
+    # "table": "on blue1"
+})
+
 console = Console(theme=custom_theme)
 
 EXIT_WORDS = ["0", "exit", "quit"]
@@ -53,7 +52,6 @@ def clear_screen():
 
 # MAIN MENU
 
-
 def find_or_create_username():
     while True:  # Loop until a valid username is provided or the user chooses to exit
         user_name = input("Enter your username: ").strip()
@@ -78,11 +76,10 @@ def find_or_create_username():
 
 # SUB MENU 1
 
-
 def browse_all_activities():
     table = Table(title="Portland Activities", border_style="black", show_lines=True)
     table.add_column("Name", style="table_head")
-    table.add_column("Description", style="table_head")
+    table.add_column("Description", style="table_head", width=60)
     table.add_column("Activity Type", style="table_head")
     table.add_column("Address", style="table_head")
     table.add_column("Neighborhood", style="table_head")
@@ -90,30 +87,26 @@ def browse_all_activities():
 
     activities = Activity.get_all()
     for activity in activities:
-        table.add_row(
-            activity.name,
-            activity.description,
-            activity.activity_type,
-            activity.address,
-            activity.neighborhood,
-            activity.website,
-        )
+        table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
+    console.print(table) 
 
-    console.print(table)
-
-    # attrs = vars(activity)
-    # for attr, value in attrs.items():
-    #     print(f"{attr}: {value}")
 
 
 def view_saved_activities(user):
+    table = Table(title="Portland Activities", border_style="black", show_lines=True)
+    table.add_column("Name", style="table_head")
+    table.add_column("Description", style="table_head", width=60)
+    table.add_column("Activity Type", style="table_head")
+    table.add_column("Address", style="table_head")
+    table.add_column("Neighborhood", style="table_head")
+    table.add_column("Website", style="table_head")
+    
     saved_activities = user.get_saved_activities()
     if saved_activities:
         print("Saved Activities:")
         for activity in saved_activities:
-            activity_attrs = vars(activity)
-            for attr, value in activity_attrs.items():
-                print(f"{attr}: {value}")
+            table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
+        console.print(table)
     else:
         print("No saved activities found.")
 
@@ -134,21 +127,17 @@ def delete_user(user):
         print(f"Deletion confirmation failed. Please try again.")
 
 
-# def delete_user():
-#     user_name = input("Enter your username to confirm deletion: ").strip()
-
-#     user = User.find_by_name(user_name)
-#     if user:
-#         user.delete()
-#         print(f"You have successfully deleted username: {user_name}")
-#     else:
-#         print(f"Could not find {user_name}.")
-
-
 # SUB MENU 2
 
-
 def find_activity_by_type():
+    table = Table(title="Portland Activities", border_style="black", show_lines=True)
+    table.add_column("Name", style="table_head")
+    table.add_column("Description", style="table_head", width=60)
+    table.add_column("Activity Type", style="table_head")
+    table.add_column("Address", style="table_head")
+    table.add_column("Neighborhood", style="table_head")
+    table.add_column("Website", style="table_head")
+    
     activity_types = [
         "Free Experiences",
         "Food Carts",
@@ -164,12 +153,7 @@ def find_activity_by_type():
 
     while True:  # Loop until a valid username is provided or the user chooses to exit
         try:
-            choice = int(
-                input("Enter the number for the type of activity you'd like to see: ")
-            )
-
-            # if choice in EXIT_WORDS:
-            #     exit_program()
+            choice = int(input("Enter the number for the type of activity you'd like to see: "))
 
             if 1 <= choice <= len(activity_types):
                 selected_activity_type = activity_types[choice - 1]
@@ -177,9 +161,11 @@ def find_activity_by_type():
                 if activities:
                     print(f"Here are the '{selected_activity_type}':")
                     for activity in activities:
-                        attrs = vars(activity)
-                        for attr, value in attrs.items():
-                            print(f"{attr}: {value}")
+                        table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
+                    console.print(table)
+                        # attrs = vars(activity)
+                        # for attr, value in attrs.items():
+                        #     print(f"{attr}: {value}")
                     return choice  # Exit loop after displaying activities
                 else:
                     print(f"No activities of type '{selected_activity_type}' found.")
@@ -193,6 +179,13 @@ def find_activity_by_type():
 
 
 def find_activity_by_neighborhood():
+    table = Table(title="Portland Activities", border_style="black", show_lines=True)
+    table.add_column("Name", style="table_head")
+    table.add_column("Description", style="table_head", width=60)
+    table.add_column("Activity Type", style="table_head")
+    table.add_column("Address", style="table_head")
+    table.add_column("Neighborhood", style="table_head")
+    table.add_column("Website", style="table_head")
     print(
         "Examples of neighborhoods in Portland: Pearl District, Hawthorne, East Portland , Division, Arlington Heights"
     )
@@ -201,22 +194,28 @@ def find_activity_by_neighborhood():
     if activities:
         print(f"Activities in '{neighborhood}':")
         for activity in activities:
-            attrs = vars(activity)
-            for attr, value in attrs.items():
-                print(f"{attr}: {value}")
+            table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
+        console.print(table)
     else:
         print(f"No activities found in '{neighborhood}'.")
 
 
 def find_activity_by_rating():
+    table = Table(title="Portland Activities", border_style="black", show_lines=True)
+    table.add_column("Name", style="table_head")
+    table.add_column("Description", style="table_head", width=60)
+    table.add_column("Activity Type", style="table_head")
+    table.add_column("Address", style="table_head")
+    table.add_column("Neighborhood", style="table_head")
+    table.add_column("Website", style="table_head")
+
     rating = int(input("Enter the rating 1 - 5: "))
     activities = Activity.find_by_rating(rating)
     if activities:
         print(f"Activities with rating '{rating}':")
         for activity in activities:
-            attrs = vars(activity)
-            for attr, value in attrs.items():
-                print(f"{attr}: {value}")
+            table.add_row(activity.name, activity.description, activity.activity_type, activity.address, activity.neighborhood, activity.website)
+        console.print(table)
     else:
         print(f"No activities with rating '{rating}' found.")
 
@@ -337,7 +336,6 @@ def add_new_activity():
 
 
 # SUB MENU 3
-
 
 def update_rating_review_activity(user):
     activity_id = int(input("Enter the activity id:"))

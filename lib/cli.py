@@ -18,15 +18,14 @@ from helpers import (
     clear_screen,
 )
 
-custom_theme = Theme(
-    {
-        "heading": "bold bright_white",
-        "table_head": "bold bright_white on blue1",
-        "subhead": "turquoise2",
-        "tile": "bold gold3 on blue1",
-        "table": "on blue1",
-    }
-)
+
+custom_theme = Theme({
+    "heading": "bright_white",
+    "table_head": "bright_white",
+    "subhead": "bright_white",
+    # "tile": "bold gold3 on blue1",
+    # "table": "on blue1"
+})
 console = Console(theme=custom_theme)
 
 
@@ -96,7 +95,7 @@ def main():
                         elif choice_sub_3 == "1":
                             break
                         elif choice_sub_3 == "2":
-                            update_rating_review_activity()
+                            update_rating_review_activity(user)
                         elif choice_sub_3 == "3":
                             delete_user_activity(user)
                         else:

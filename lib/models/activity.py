@@ -1,7 +1,7 @@
 from models.__init__ import CONN, CURSOR
 from models.helper import Helper
 
-import ipdb
+
 
 
 class Activity(Helper):

@@ -139,7 +139,9 @@ def find_activity_by_type():
             #     exit_program()
 
             if 1 <= choice <= len(activity_types):
-                selected_activity_type = activity_types[choice - 1]
+                selected_activity_type = activity_types[
+                    choice - 1
+                ].lower()  # Convert to lowercase
                 activities = Activity.find_by_type(selected_activity_type)
                 if activities:
                     print(f"Here are the '{selected_activity_type}':")
@@ -161,7 +163,7 @@ def find_activity_by_type():
 
 def find_activity_by_neighborhood():
     print(
-        "Examples of neighborhoods in Portland: Pearl District, Hawthorne, Alberta, Division, Clinton, Mississippi, St. Johns, Arlington Heights"
+        "Examples of neighborhoods in Portland: Hawthorne, Northwest District, Buckman, Clinton, Pearl District, Arlington Heights"
     )
     neighborhood = input("Enter the neighborhood: ")
     activities = Activity.find_by_neighborhood(neighborhood)

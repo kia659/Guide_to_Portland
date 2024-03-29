@@ -53,7 +53,7 @@ def main():
                             clear_screen()
                             find_activity_by_rating()
                         elif choice_sub_2 == "5":
-                            save_to_activities(user)  
+                            save_to_activities(user)
                         elif choice_sub_2 == "6":
                             add_new_activity()
                         elif choice_sub_2 == "7":
@@ -134,7 +134,6 @@ def sub_menu_3():
     print("Please select an option:")
     print("0. Exit the program.")
     print("1. go back to previous menu")
-    # ----????
     print("2. Add rating & review to activity.")
     print("3. Delete activity from saved list.")
     print("4. Browse all activities.")

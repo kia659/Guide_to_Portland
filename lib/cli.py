@@ -19,11 +19,11 @@ from helpers import (
 )
 
 custom_theme = Theme({
-    "heading": "bold bright_white",
-    "table_head": "bold bright_white on blue1",
-    "subhead": "turquoise2",
-    "tile": "bold gold3 on blue1",
-    "table": "on blue1"
+    "heading": "bright_white",
+    "table_head": "bright_white",
+    "subhead": "bright_white",
+    # "tile": "bold gold3 on blue1",
+    # "table": "on blue1"
 })
 console = Console(theme=custom_theme)
 
@@ -145,7 +145,6 @@ def sub_menu_3():
     print("1. Return to previous menu.")
     print("2. Add rating & review to activity.")
     print("3. Delete activity from saved list.")
-    print("4. Browse all activities.")
 
 
 if __name__ == "__main__":

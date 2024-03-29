@@ -1,15 +1,16 @@
 # lib/helpers.py
 
-from models.user import User
-from models.activity import Activity
-from models.user_activity import UserActivity
-from datetime import datetime
 import os
 from rich.console import Console
 from rich.console import Theme
 from rich.table import Table
 import ipdb
+from datetime import datetime
 
+import ipdb
+from models.activity import Activity
+from models.user import User
+from models.user_activity import UserActivity
 
 custom_theme = Theme({
     "heading": "bright_white",
@@ -51,6 +52,7 @@ def clear_screen():
 
 # MAIN MENU
 
+
 def find_or_create_username():
     while True:  # Loop until a valid username is provided or the user chooses to exit
         user_name = input("Enter your username: ").strip()
@@ -72,7 +74,9 @@ def find_or_create_username():
             print(f"Welcome back, {user_name}!")
             return user  # Exit the loop and return the existing user object
 
+
 # SUB MENU 1
+
 
 def browse_all_activities():
     table = Table(title="Portland Activities", border_style="black", show_lines=True)
@@ -112,7 +116,7 @@ def delete_user(user):
 
     found_user = User.find_by_name(user.user_name)
 
-    if confirmation == 'delete':
+    if confirmation == "delete":
         if found_user:
             found_user.delete()
             print(f"You have successfully deleted username: {user.user_name}")
@@ -135,6 +139,7 @@ def delete_user(user):
 
 # SUB MENU 2
 
+
 def find_activity_by_type():
     activity_types = [
         "Free Experiences",
@@ -142,22 +147,26 @@ def find_activity_by_type():
         "Breweries & Bars",
         "Shops",
         "Paid Experiences",
-        "Restaurants"
+        "Restaurants",
     ]
-    
+
     print("Activity type options:")
     for i, activity_type in enumerate(activity_types, start=1):
         print(f"{i}. {activity_type}")
-    
+
     while True:  # Loop until a valid username is provided or the user chooses to exit
         try:
-            choice = int(input("Enter the number for the type of activity you'd like to see: "))
+            choice = int(
+                input("Enter the number for the type of activity you'd like to see: ")
+            )
 
             # if choice in EXIT_WORDS:
             #     exit_program()
 
             if 1 <= choice <= len(activity_types):
-                selected_activity_type = activity_types[choice - 1]
+                selected_activity_type = activity_types[
+                    choice - 1
+                ].lower()  # Convert to lowercase
                 activities = Activity.find_by_type(selected_activity_type)
                 if activities:
                     print(f"Here are the '{selected_activity_type}':")
@@ -165,18 +174,21 @@ def find_activity_by_type():
                         attrs = vars(activity)
                         for attr, value in attrs.items():
                             print(f"{attr}: {value}")
-                    return choice # Exit loop after displaying activities
+                    return choice  # Exit loop after displaying activities
                 else:
                     print(f"No activities of type '{selected_activity_type}' found.")
             else:
-                print("Invalid choice. Please enter a number corresponding to an activity type.")
+                print(
+                    "Invalid choice. Please enter a number corresponding to an activity type."
+                )
                 # return choice # Exit loop if no activities found
         except ValueError:
             print("Invalid input. Please enter a number.")
 
+
 def find_activity_by_neighborhood():
     print(
-        "Examples of neighborhoods in Portland: Pearl District, Hawthorne, Alberta, Division, Clinton, Mississippi, St. Johns, Arlington Heights"
+        "Examples of neighborhoods in Portland: Hawthorne, Northwest District, Buckman, Clinton, Pearl District, Arlington Heights"
     )
     neighborhood = input("Enter the neighborhood: ")
     activities = Activity.find_by_neighborhood(neighborhood)
@@ -205,14 +217,16 @@ def find_activity_by_rating():
 
 def save_to_activities(user):
     try:
-        saved_activity_id = int(input("Enter the id # for the activity you would like to save: "))
+        saved_activity_id = int(
+            input("Enter the id # for the activity you would like to save: ")
+        )
         activity = Activity.find_by_id(saved_activity_id)
         if activity:
             if activity not in user.get_saved_activities():
                 UserActivity.create(user.id, saved_activity_id, datetime.now())
                 print("Activity has been saved!")
             else:
-                print("You've already saved this activity.") 
+                print("You've already saved this activity.")
         else:
             print("Error: Please choose a valid id number for the activity.")
     except ValueError:
@@ -242,7 +256,9 @@ def add_new_activity():
         print(f"Error adding new activity: {e}")
         return None
 
+
 # SUB MENU 3
+
 
 def update_rating_review_activity():
     activity_id = input("Enter the activity id:")
@@ -255,8 +271,8 @@ def update_rating_review_activity():
             )
             activity.rating = rating
 
-            activity.update_rating_and_review()
-            print(f"Success: {activity}")
+            activity.update_rating_and_review(new_review, new_rating)
+            print(f"Success: activity id {activity_id} has been updated")
         except Exception as exc:
             print("Error updating rating and review: ", exc)
     else:
@@ -272,4 +288,3 @@ def delete_user_activity(user):
         print(f"You have successfully deleted activity: {deleted_id}")
     else:
         print(f"Could not find {deleted_id}.")
-

@@ -62,7 +62,7 @@ def main():
                             clear_screen()
                             find_activity_by_rating()
                         elif choice_sub_2 == "5":
-                            save_to_activities(user)  
+                            save_to_activities(user)
                         elif choice_sub_2 == "6":
                             add_new_activity()
                         elif choice_sub_2 == "7":
@@ -76,7 +76,7 @@ def main():
                                 elif choice_sub_3 == "1":
                                     break
                                 elif choice_sub_3 == "2":
-                                    update_rating_review_activity()
+                                    update_rating_review_activity(user)
                                 elif choice_sub_3 == "3":
                                     delete_user_activity(user)
                                 else:

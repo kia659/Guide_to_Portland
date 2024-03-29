@@ -1,9 +1,10 @@
 import csv
 import sqlite3
-from models.activity import Activity
-import ipdb
-from random import sample
 from datetime import datetime
+from random import sample
+
+import ipdb
+from models.activity import Activity
 from models.user import User
 from models.user_activity import UserActivity
 
@@ -48,18 +49,21 @@ class SeedDatabase:
                 2,
             )
             kia_activity.save()
-            ipdb.set_trace()
-            
+
             steph = User.create("steph")
             steph_activity = UserActivity(
                 steph.id, sample(activities, 1)[0].id, datetime.now(), "So fun!", 5
             )
             steph_activity.save()
             steph_activity2 = UserActivity(
-                steph.id, sample(activities, 1)[0].id, datetime.now(), "Really enjoyed this!", 5
+                steph.id,
+                sample(activities, 1)[0].id,
+                datetime.now(),
+                "Really enjoyed this!",
+                5,
             )
             steph_activity2.save()
-            
+
             xen = User.create("xen")
             xen_activity = UserActivity(
                 xen.id,
@@ -75,7 +79,7 @@ class SeedDatabase:
             )
             matteo_activity.save()
             matteo_activity2 = UserActivity(
-            matteo.id, sample(activities, 1)[0].id, datetime.now(), "loved this!", 4
+                matteo.id, sample(activities, 1)[0].id, datetime.now(), "loved this!", 4
             )
             matteo_activity2.save()
             # cursor.execute(

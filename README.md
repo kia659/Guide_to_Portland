@@ -33,7 +33,7 @@ To get started with Guide to Portland, follow these steps:
 
 4. Seed the database:
 
- ```bash
+    ```bash
     python lib/seed.py
     ```
 

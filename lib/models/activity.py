@@ -81,19 +81,13 @@ class Activity(Helper):
 
     @address.setter
     def address(self, value):
-        # checks for address components
         components = value.split(" ")
         if len(components) < 5:
             raise ValueError("Address is too short, seems to be missing components.")
-        # is a street number
-        # if not components[0].isdigit():
-        #     raise ValueError("Address must start with a street number.")
-        # is in portland
         if not (
             components[-3].lower() == "portland," and components[-2].lower() == "or"
         ):
             raise ValueError("Address must be in Portland, OR.")
-        # looks like a ZIP code (5 digits)
         zip_code = components[-1]
         if not zip_code.startswith("97"):
             raise ValueError("ZIP code must start with '97'.")
@@ -148,30 +142,6 @@ class Activity(Helper):
         except Exception as e:
             return e
 
-    # def save(self):
-    #     try:
-
-    #         with CONN:
-    #             CURSOR.execute(
-    #                 f"""
-    #                     INSERT INTO {type(self).pascal_to_camel_plural()}
-    #                     (name, description, activity_type, address, neighborhood, website)
-    #                     VALUES
-    #                     (?, ?, ?, ?, ?, ?);
-    #                 """,
-    #                 (
-    #                     self.name,
-    #                     self.description,
-    #                     self.activity_type,
-    #                     self.address,
-    #                     self.neighborhood,
-    #                     self.website,
-    #                 ),
-    #             )
-    #         self.id = CURSOR.lastrowid
-    #     except Exception as e:
-    #         return e
-
     def save(self):
         try:
 
@@ -198,6 +168,40 @@ class Activity(Helper):
             return e
 
     @classmethod
+    def find_by_neighborhood(cls, neighborhood):
+        try:
+            with CONN:
+                query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE neighborhood = ?"
+                result = CURSOR.execute(query, (neighborhood,))
+                rows = result.fetchall()
+                return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            return e
+
+    @classmethod
+    def find_by_rating(cls, rating):
+        try:
+            return [
+                activity
+                for activity in cls.get_all()
+                if activity.get_rating() == rating
+            ]
+
+        except Exception as e:
+            return e
+
+    @classmethod
+    def find_by_type(cls, activity_type):
+        try:
+            with CONN:
+                query = f"SELECT * FROM {cls.pascal_to_camel_plural()} WHERE activity_type = ?"
+                result = CURSOR.execute(query, (activity_type,))
+                rows = result.fetchall()
+                return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            return e
+
+    @classmethod
     def instance_from_db(cls, row):
         activity = cls.all.get(row[0])
         if activity:
@@ -212,15 +216,6 @@ class Activity(Helper):
             cls.all[activity.id] = activity
         return activity
 
-    # @classmethod
-    # def create(
-    #     cls, name, description, activity_type, address, neighborhood, website=None
-    # ):
-    #     new_activity = cls(
-    #         name, description, activity_type, address, neighborhood, website
-    #     )
-    #     new_activity.save()
-
     @classmethod
     def create(
         cls, name, description, activity_type, address, neighborhood, website=None
@@ -231,19 +226,6 @@ class Activity(Helper):
         new_activity.save()
         return new_activity
 
-    @classmethod
-    def find_by_rating(cls, rating):
-        try:
-            return [
-                activity
-                for activity in cls.get_all()
-                if activity.get_rating() == rating
-            ]
-
-        except Exception as e:
-            return e
-
-    # Get all of the user activities for a specific activity
     def get_user_activities(self):
         from models.user_activity import UserActivity
 
